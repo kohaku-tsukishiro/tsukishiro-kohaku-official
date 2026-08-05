@@ -1,3 +1,9 @@
+# private (plaintext of password-protected materials — NEVER commit)
+website/private-assets/
+
+# local claude settings
+.claude/settings.local.json
+
 # build output
 dist/
 # generated types
@@ -22,3 +28,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# separate git repository (has its own remote: kohaku-tsukishiro/kemoke17)
+apps/kemoket-app/

@@ -1,0 +1,1323 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <main id="main">
+
+    <!-- ============================================================
+         Hero — 設定資料の世界観（グラデ背景 × 白HUDフレーム）
+    ============================================================ -->
+    <section id="hero" class="hero">
+      <div class="hero-bg circuit-white" aria-hidden="true"></div>
+      <div class="hero-depth" aria-hidden="true"></div>
+      <div class="hero-moon" aria-hidden="true"></div>
+
+      <!-- 資料フレーム（白枠）の CSS 再構成 -->
+      <div class="hero-frame" aria-hidden="true">
+        <span class="hf-corner-cut"></span>
+        <span class="hf-slash hud-slash hud-slash--white"></span>
+        <span class="hf-chevrons hud-chevrons"><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="hf-rail"></span>
+      </div>
+
+      <div class="container hero-container">
+
+        <div class="hero-content">
+          <p class="eyebrow">TSUKISHIRO KOHAKU — OFFICIAL BRAND SITE</p>
+
+          <h1 class="hero-logo">
+            <img
+              src="/assets/logos/logo-main.png"
+              alt="月白コハク"
+              width="1600"
+              height="800"
+              fetchpriority="high"
+            />
+          </h1>
+
+          <div class="hero-names" aria-label="名前の表記">
+            <span class="name-chip">月白虎珀</span>
+            <span class="name-chip">つきしろ こはく</span>
+            <span class="name-chip name-chip--debut">2026.09 DEBUT</span>
+          </div>
+
+          <p class="lead">月光をまとう、<br class="sp-only" />近未来の白虎系ケモV。</p>
+
+          <div class="hero-actions">
+            <a href="#" class="btn btn-hero-primary">
+              YouTube
+              <span class="btn-arrow" aria-hidden="true">▶</span>
+            </a>
+            <a
+              href="https://x.com/Kohaku_Tsuki905"
+              class="btn btn-hero-secondary"
+              target="_blank"
+              rel="noopener"
+            >X (Twitter)</a>
+            <a href="/reference" class="btn-text">公式設定資料室 →</a>
+          </div>
+        </div>
+
+        <!-- 立ち絵（背景なし・HUD装飾のみ） -->
+        <div class="hero-visual">
+          <a href="/reference" class="hero-figure" aria-label="立ち絵（着衣・基本色）— 公式設定資料室で見る">
+            <span class="hfg-frame" aria-hidden="true"></span>
+            <span class="hfg-chip" aria-hidden="true">
+              <span class="hfg-label when-revealed">OFFICIAL VISUAL</span>
+              <span class="hfg-label when-sealed">COMING SOON</span>
+              <span class="hfg-no when-revealed">基本色［青］</span>
+              <span class="hfg-no when-sealed">09.05 SAT 21:00</span>
+            </span>
+            <picture>
+              <source
+                id="hero-source"
+                srcset="/assets/character/hero-figure-silhouette.webp"
+                data-srcset="/assets/character/hero-figure.webp"
+                type="image/webp"
+              />
+              <img
+                id="hero-img"
+                src="/assets/character/hero-figure-silhouette.png"
+                data-src="/assets/character/hero-figure.png"
+                data-alt="月白コハク 立ち絵（着衣・基本色）"
+                alt="月白コハク シルエット（2026年9月5日 21時公開）"
+                width="1100"
+                height="1096"
+                fetchpriority="high"
+              />
+            </picture>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         01 Profile
+    ============================================================ -->
+    <section id="profile" class="section sec-profile">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="sec-no">NO.01</span>
+          <div class="sec-titles">
+            <h2 class="sec-ja">プロフィール</h2>
+            <p class="sec-en">Profile</p>
+          </div>
+          <span class="sec-line" aria-hidden="true"></span>
+        </div>
+
+        <div class="doc-panel hud-corners profile-panel reveal">
+          <div class="profile-watermark" aria-hidden="true">
+            <img src="/assets/logos/logo-symbol.png" alt="" width="360" height="360" loading="lazy" />
+          </div>
+
+          <div class="profile-grid">
+            <dl class="profile-dl">
+              <div class="dl-row">
+                <dt>NAME</dt>
+                <dd>月白コハク</dd>
+              </div>
+              <div class="dl-row">
+                <dt>漢字表記</dt>
+                <dd>月白虎珀</dd>
+              </div>
+              <div class="dl-row">
+                <dt>読み</dt>
+                <dd>つきしろ こはく</dd>
+              </div>
+              <div class="dl-row">
+                <dt>ENGLISH</dt>
+                <dd>Tsukishiro Kohaku</dd>
+              </div>
+              <div class="dl-row">
+                <dt>種族</dt>
+                <dd>白虎系ケモV</dd>
+              </div>
+              <div class="dl-row">
+                <dt>活動内容</dt>
+                <dd>雑談、ゲーム、企画、自作ゲーム・自作ツール</dd>
+              </div>
+              <div class="dl-row last">
+                <dt>DEBUT</dt>
+                <dd><span class="amber">2026年9月</span>（予定）</dd>
+              </div>
+            </dl>
+
+            <div class="profile-side">
+              <p class="profile-bio">
+                月光をまとう、近未来の白虎系ケモV。<br />
+                月の力が強くなると、動物（白虎）の姿になることがある。<br />
+                雑談やゲームを中心に、自作ゲーム・ツール制作まで幅広く活動予定。
+              </p>
+              <div class="profile-marks" aria-hidden="true">
+                <span class="mark-crescent"></span>
+                <span class="mark-note">額と身体に三日月の模様</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         02 Activity
+    ============================================================ -->
+    <section id="activity" class="section sec-activity">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="sec-no">NO.02</span>
+          <div class="sec-titles">
+            <h2 class="sec-ja">活動内容</h2>
+            <p class="sec-en">Activity</p>
+          </div>
+          <span class="sec-line" aria-hidden="true"></span>
+        </div>
+
+        <div class="activity-grid">
+
+          <div class="activity-card reveal hud-sweep">
+            <span class="act-no" aria-hidden="true">ACT-01</span>
+            <span class="act-chip" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="11" cy="16" r="1.5" fill="currentColor"/>
+                <circle cx="16" cy="16" r="1.5" fill="currentColor"/>
+                <circle cx="21" cy="16" r="1.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <p class="act-name">雑談</p>
+            <p class="act-desc">日常のことや気になることをのんびり話します。</p>
+          </div>
+
+          <div class="activity-card reveal hud-sweep">
+            <span class="act-no" aria-hidden="true">ACT-02</span>
+            <span class="act-chip" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 4 L28 16 L16 28 L4 16 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M16 10 L22 16 L16 22 L10 16 Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" opacity="0.5"/>
+              </svg>
+            </span>
+            <p class="act-name">ゲーム</p>
+            <p class="act-desc">様々なジャンルのゲームを中心に配信予定。</p>
+          </div>
+
+          <div class="activity-card reveal hud-sweep">
+            <span class="act-no" aria-hidden="true">ACT-03</span>
+            <span class="act-chip" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 6 L26 24 L6 24 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M16 12 L21 22 L11 22 Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" opacity="0.5"/>
+              </svg>
+            </span>
+            <p class="act-name">歌・企画</p>
+            <p class="act-desc">歌配信や視聴者参加型の企画なども予定。</p>
+          </div>
+
+          <div class="activity-card reveal hud-sweep">
+            <span class="act-no" aria-hidden="true">ACT-04</span>
+            <span class="act-chip" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <rect x="5" y="5" width="22" height="22" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                <rect x="10" y="10" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/>
+                <rect x="14" y="14" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.8"/>
+              </svg>
+            </span>
+            <p class="act-name">自作ゲーム・自作ツール</p>
+            <p class="act-desc">自ら制作したゲームやツールを紹介・配信します。</p>
+          </div>
+
+          <div class="activity-card reveal hud-sweep">
+            <span class="act-no" aria-hidden="true">ACT-05</span>
+            <span class="act-chip" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M16 11 L16 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="16" cy="21.5" r="1.4" fill="currentColor"/>
+              </svg>
+            </span>
+            <p class="act-name">ちょっと役に立つ話</p>
+            <p class="act-desc">日々の生活に役立つ小話をお届けします。</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         03 Links
+    ============================================================ -->
+    <section id="links" class="section sec-links">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="sec-no">NO.03</span>
+          <div class="sec-titles">
+            <h2 class="sec-ja">リンク</h2>
+            <p class="sec-en">Links</p>
+          </div>
+          <span class="sec-line" aria-hidden="true"></span>
+        </div>
+
+        <div class="links-layout reveal">
+          <a href="#" class="link-card link-yt hud-sweep">
+            <div class="link-body">
+              <span class="link-platform">YouTube</span>
+              <span class="link-desc">動画・配信チャンネル</span>
+            </div>
+            <span class="link-arrow" aria-hidden="true">→</span>
+          </a>
+          <div class="links-sub">
+            <a
+              href="https://x.com/Kohaku_Tsuki905"
+              class="link-card hud-sweep"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="link-body">
+                <span class="link-platform">X (Twitter)</span>
+                <span class="link-desc">@Kohaku_Tsuki905 — 最新情報・日常</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="/reference" class="link-card hud-sweep">
+              <div class="link-body">
+                <span class="link-platform">公式設定資料室</span>
+                <span class="link-desc">設定資料・ロゴ・ブランド素材</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="/guideline" class="link-card hud-sweep">
+              <div class="link-body">
+                <span class="link-platform">二次創作ガイドライン</span>
+                <span class="link-desc">ファンアート・グッズ・表現について</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         04 Guideline
+    ============================================================ -->
+    <section id="guideline" class="section section-compact sec-guideline">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="sec-no">NO.04</span>
+          <div class="sec-titles">
+            <h2 class="sec-ja">二次創作ガイドライン</h2>
+            <p class="sec-en">Fan Works Guideline</p>
+          </div>
+          <span class="sec-line" aria-hidden="true"></span>
+        </div>
+
+        <div class="doc-panel guideline-card reveal">
+          <span class="guideline-badge guideline-badge--ok">公開中</span>
+          <div class="guideline-body">
+            <p class="guideline-lead">
+              二次創作ガイドラインを公開しました。イラスト・漫画・動画・コスプレなどの二次創作は大歓迎です！
+              グッズ制作や表現に関するお願い、禁止事項をまとめています。
+            </p>
+            <a href="/guideline" class="guideline-link">二次創作ガイドラインを読む →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Reference Room banner
+    ============================================================ -->
+    <section class="section-compact sec-ref-banner">
+      <div class="container">
+        <a href="/reference" class="ref-banner reveal circuit-white">
+          <span class="rb-frame" aria-hidden="true"></span>
+          <div class="rb-text">
+            <p class="rb-label">OFFICIAL REFERENCE ARCHIVE</p>
+            <p class="rb-title">公式設定資料室</p>
+            <p class="rb-desc">三面図・設定資料・ロゴ・カラーパレットを公式資料ビューアで公開中</p>
+          </div>
+          <span class="rb-chevrons hud-chevrons" aria-hidden="true"><i></i><i></i><i></i></span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>
+
+<script>
+  // 公開時刻を過ぎたら（<html>.revealed 付与後）Heroのシルエットを本画像へ差し替え
+  const heroSource = document.getElementById("hero-source") as HTMLSourceElement | null;
+  const heroImg = document.getElementById("hero-img") as HTMLImageElement | null;
+
+  function revealHero() {
+    if (heroSource?.dataset.srcset) heroSource.srcset = heroSource.dataset.srcset;
+    if (heroImg?.dataset.src) {
+      heroImg.src = heroImg.dataset.src;
+      if (heroImg.dataset.alt) heroImg.alt = heroImg.dataset.alt;
+    }
+  }
+
+  if (document.documentElement.classList.contains("revealed")) {
+    revealHero();
+  } else {
+    const mo = new MutationObserver(() => {
+      if (document.documentElement.classList.contains("revealed")) {
+        mo.disconnect();
+        revealHero();
+      }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  }
+</script>
+
+<style>
+  /* ============================================================
+     Hero
+  ============================================================ */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-top: var(--header-h);
+    padding-bottom: 40px;
+    background: var(--grad-brand);
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.26;
+    pointer-events: none;
+  }
+
+  /* 奥行きレイヤー（上部の月光・下部の陰影・光の粒） */
+  .hero-depth {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 85% 60% at 72% 12%, rgba(255, 255, 255, 0.18) 0%, transparent 58%),
+      radial-gradient(ellipse 130% 55% at 50% 112%, rgba(12, 35, 64, 0.3) 0%, transparent 60%);
+  }
+
+  .hero-depth::before {
+    content: "";
+    position: absolute;
+    top: 16%;
+    left: 8%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      14vw 8vh  0 0   rgba(255, 255, 255, 0.55),
+      30vw 24vh 0 1px rgba(255, 255, 255, 0.4),
+      52vw 6vh  0 0   rgba(255, 255, 255, 0.5),
+      68vw 30vh 0 1px rgba(255, 255, 255, 0.35),
+      20vw 48vh 0 0   rgba(255, 255, 255, 0.45),
+      62vw 56vh 0 0   rgba(255, 255, 255, 0.3),
+      44vw 40vh 0 1px rgba(223, 248, 255, 0.5),
+      80vw 14vh 0 0   rgba(223, 248, 255, 0.4);
+  }
+
+  /* 月光（三日月のグロー） */
+  .hero-moon {
+    position: absolute;
+    top: 6%;
+    right: 5%;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    box-shadow:
+      inset -50px -15px 0 rgba(255, 255, 255, 0.62),
+      0 0 110px rgba(255, 255, 255, 0.5),
+      0 0 240px rgba(255, 255, 255, 0.22);
+    transform: rotate(24deg);
+    pointer-events: none;
+    animation: moon-drift 9s ease-in-out infinite alternate;
+  }
+
+  @keyframes moon-drift {
+    from { transform: rotate(24deg) translateY(0); }
+    to   { transform: rotate(24deg) translateY(-12px); }
+  }
+
+  /* --- 白HUDフレーム（資料フレームのCSS再構成） --- */
+  .hero-frame {
+    position: absolute;
+    inset: calc(var(--header-h) + 16px) 20px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+
+  /* 左上のコーナーカット（塗り三角） */
+  .hf-corner-cut {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.9);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    border-top-left-radius: 8px;
+  }
+
+  /* 上部の斜めスラッシュバー */
+  .hf-slash {
+    position: absolute;
+    top: 14px;
+    right: 8%;
+    width: min(300px, 34%);
+  }
+
+  /* 左下のシェブロン */
+  .hf-chevrons {
+    position: absolute;
+    left: 26px;
+    bottom: 18px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* 右側の縦レール */
+  .hf-rail {
+    position: absolute;
+    top: 10%;
+    bottom: 12%;
+    right: 12px;
+    width: 5px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.25)
+    );
+    border-radius: 3px;
+  }
+
+  .hero-container {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: clamp(28px, 5vw, 64px);
+    position: relative;
+    z-index: 1;
+    padding-top: 40px;
+    padding-bottom: 30px;
+  }
+
+  .eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.3em;
+    color: #fff;
+    text-shadow: 0 1px 10px rgba(12, 35, 64, 0.3);
+  }
+
+  .hero-logo {
+    margin: 0 0 24px;
+    max-width: 620px;
+  }
+
+  .hero-logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 14px 34px rgba(12, 35, 64, 0.28));
+  }
+
+  /* 名前チップ（資料のラベルボックス形式） */
+  .hero-names {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 26px;
+  }
+
+  .name-chip {
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--c-navy);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    padding: 6px 16px;
+    border-radius: 999px;
+    box-shadow: 0 2px 10px rgba(12, 35, 64, 0.15);
+  }
+
+  .name-chip--debut {
+    color: #8a5f1d;
+    font-family: var(--font-mono);
+    letter-spacing: 0.12em;
+  }
+
+  .lead {
+    margin: 0;
+    font-size: clamp(1.45rem, 2.9vw, 2.05rem);
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.09em;
+    line-height: 1.65;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .sp-only { display: none; }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  /* HUDシステムUI風ボタン（角カット＋光のスイープ＋境界発光） */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    padding: 13px 34px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: background 0.2s, color 0.2s, box-shadow 0.25s, transform 0.2s;
+  }
+
+  /* ホバー時に流れる光 */
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 40%,
+      var(--btn-shine, rgba(255, 255, 255, 0.45)) 50%,
+      transparent 60%
+    );
+    transform: translateX(-130%);
+    transition: transform 0.55s ease;
+    pointer-events: none;
+  }
+
+  .btn:hover::after,
+  .btn:focus-visible::after {
+    transform: translateX(130%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn::after { display: none; }
+  }
+
+  .btn-hero-primary {
+    background: var(--c-navy);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(56, 195, 226, 0.35);
+  }
+
+  .btn-hero-primary:hover,
+  .btn-hero-primary:focus-visible {
+    background: #143156;
+    box-shadow:
+      inset 0 0 0 1px rgba(127, 231, 242, 0.85),
+      0 0 26px rgba(255, 255, 255, 0.4),
+      0 8px 22px rgba(12, 35, 64, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .btn-arrow { font-size: 0.62rem; }
+
+  .btn-hero-secondary {
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--c-navy);
+    --btn-shine: rgba(56, 195, 226, 0.3);
+    box-shadow: inset 0 0 0 1px rgba(43, 124, 217, 0.2);
+  }
+
+  .btn-hero-secondary:hover,
+  .btn-hero-secondary:focus-visible {
+    background: #fff;
+    box-shadow:
+      inset 0 0 0 1px rgba(43, 124, 217, 0.55),
+      0 0 24px rgba(255, 255, 255, 0.55),
+      0 8px 20px rgba(12, 35, 64, 0.22);
+    transform: translateY(-2px);
+  }
+
+  .btn-text {
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+    padding: 2px 2px 3px;
+    transition: border-color 0.2s, color 0.2s;
+    text-shadow: 0 1px 8px rgba(12, 35, 64, 0.3);
+  }
+
+  .btn-text:hover,
+  .btn-text:focus-visible {
+    border-bottom-color: #fff;
+  }
+
+  /* --- 資料風HUDビューア --- */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-figure {
+    position: relative;
+    display: block;
+    width: min(545px, 100%);
+    text-decoration: none;
+  }
+
+  /* 月光グロー（キャラ背後の光輪） */
+  .hero-figure::before {
+    content: "";
+    position: absolute;
+    inset: 2% 2% 12%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 50% 36%,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.2) 44%,
+      rgba(127, 231, 242, 0.1) 60%,
+      transparent 74%
+    );
+    pointer-events: none;
+  }
+
+  /* HUDコーナーブラケット（白） */
+  .hfg-frame {
+    position: absolute;
+    inset: -6px 2px 6% 2px;
+    pointer-events: none;
+  }
+
+  .hfg-frame::before,
+  .hfg-frame::after {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 30px;
+  }
+
+  .hfg-frame::before {
+    top: 0;
+    left: 0;
+    border-top: 2.5px solid rgba(255, 255, 255, 0.9);
+    border-left: 2.5px solid rgba(255, 255, 255, 0.9);
+    border-top-left-radius: 6px;
+  }
+
+  .hfg-frame::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2.5px solid rgba(255, 255, 255, 0.9);
+    border-right: 2.5px solid rgba(255, 255, 255, 0.9);
+    border-bottom-right-radius: 6px;
+  }
+
+  /* 資料ラベルチップ */
+  .hfg-chip {
+    position: absolute;
+    top: -18px;
+    left: 14px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 999px;
+    padding: 5px 12px 5px 14px;
+    box-shadow: 0 3px 12px rgba(12, 35, 64, 0.18);
+  }
+
+  .hfg-label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: var(--c-cyan-text);
+    white-space: nowrap;
+  }
+
+  .hfg-no {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--c-navy);
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .hero-figure picture {
+    position: relative;
+    display: block;
+  }
+
+  .hero-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter:
+      drop-shadow(0 26px 52px rgba(12, 35, 64, 0.42))
+      drop-shadow(0 0 32px rgba(255, 255, 255, 0.3));
+    -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 99%);
+    mask-image: linear-gradient(to bottom, #000 84%, transparent 99%);
+    transition: transform 0.3s ease;
+  }
+
+  .hero-figure:hover img,
+  .hero-figure:focus-visible img {
+    transform: translateY(-4px);
+  }
+
+  /* 公開前: シルエット演出（グローは残して期待感を出す） */
+  :global(html:not(.revealed)) .hero-figure img {
+    filter:
+      drop-shadow(0 26px 52px rgba(12, 35, 64, 0.45))
+      drop-shadow(0 0 40px rgba(255, 255, 255, 0.4));
+  }
+
+  /* ============================================================
+     01 Profile
+  ============================================================ */
+  .sec-profile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='460' viewBox='0 0 460 460' fill='none' stroke='%232b7cd9' stroke-width='1.6'%3E%3Cpath d='M20 60h150l40 40h120'/%3E%3Ccircle cx='340' cy='100' r='3.4'/%3E%3Cpath d='M60 400V280l30-30V180'/%3E%3Ccircle cx='90' cy='176' r='3.4'/%3E%3Cpath d='M420 200v110l-40 40'/%3E%3Ccircle cx='376' cy='354' r='3.4'/%3E%3C/svg%3E");
+    background-size: 460px 460px;
+    pointer-events: none;
+  }
+
+  /* ============================================================
+     セクションのメリハリ
+     — 番号ウォーターマーク／背景の濃淡／区切りライン
+  ============================================================ */
+  .sec-profile::after,
+  .sec-activity::after,
+  .sec-links::after,
+  .sec-guideline::after {
+    position: absolute;
+    top: 26px;
+    right: 3%;
+    font-family: var(--font-mono);
+    font-size: clamp(5rem, 11vw, 8.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(43, 124, 217, 0.12);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .sec-profile::after   { content: "01"; }
+  .sec-activity::after  { content: "02"; }
+  .sec-links::after     { content: "03"; }
+  .sec-guideline::after { content: "04"; }
+
+  .sec-activity {
+    background: linear-gradient(180deg, #eaf4fa 0%, #f4fafc 100%);
+    border-top: 1px solid rgba(43, 124, 217, 0.12);
+  }
+
+  .sec-links::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 46% 60% at 6% 80%, rgba(82, 211, 168, 0.09) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 55% at 96% 15%, rgba(56, 195, 226, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .sec-guideline {
+    background: linear-gradient(180deg, #edf6fb 0%, #f4fafc 90%);
+    border-top: 1px solid rgba(43, 124, 217, 0.1);
+  }
+
+  .profile-panel {
+    padding: 40px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .profile-watermark {
+    position: absolute;
+    right: -50px;
+    bottom: -70px;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  .profile-watermark img {
+    width: 360px;
+    height: auto;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    position: relative;
+  }
+
+  .profile-dl { margin: 0; }
+
+  .dl-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px dashed rgba(43, 124, 217, 0.22);
+  }
+
+  .dl-row.last { border-bottom: none; }
+
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: var(--c-cyan-text);
+    padding-top: 4px;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--c-navy);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .amber { color: #a06e1c; }
+
+  .profile-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 6px;
+  }
+
+  .profile-bio {
+    margin: 0;
+    color: var(--c-ink);
+    font-size: 0.98rem;
+    line-height: 2.1;
+  }
+
+  .profile-marks {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  /* 琥珀の三日月（キャラクターの模様モチーフ） */
+  .mark-crescent {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    box-shadow: inset -6px -2px 0 var(--c-amber);
+    transform: rotate(18deg);
+    flex-shrink: 0;
+  }
+
+  .mark-note {
+    font-size: 0.72rem;
+    color: var(--c-muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ============================================================
+     02 Activity
+  ============================================================ */
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+  }
+
+  .activity-card {
+    grid-column: span 2;
+    position: relative;
+    background: var(--c-panel);
+    border: var(--border-frame);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-panel);
+    padding: 34px 20px 28px;
+    text-align: center;
+    transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
+    overflow: hidden;
+  }
+
+  .activity-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: var(--grad-hairline);
+  }
+
+  .activity-card:nth-child(4) { grid-column: 2 / 4; }
+  .activity-card:nth-child(5) { grid-column: 4 / 6; }
+
+  .activity-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(56, 195, 226, 0.65);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* 管理番号（左上のHUDラベル） */
+  .act-no {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    color: var(--c-cyan-text);
+    padding-left: 10px;
+    border-left: 2px solid rgba(56, 195, 226, 0.6);
+    line-height: 1.4;
+  }
+
+  .act-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background: var(--grad-frame);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(43, 124, 217, 0.28);
+  }
+
+  .act-chip svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .act-name {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+  }
+
+  .act-desc {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--c-muted);
+    line-height: 1.9;
+  }
+
+  /* ============================================================
+     03 Links
+  ============================================================ */
+  .links-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .links-sub {
+    display: grid;
+    gap: 16px;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 26px;
+    background: var(--c-panel);
+    border: var(--border-frame);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-panel);
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+
+  .link-card:hover,
+  .link-card:focus-visible {
+    border-color: rgba(56, 195, 226, 0.7);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+  }
+
+  .link-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .link-platform {
+    color: var(--c-navy);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  .link-desc {
+    font-size: 0.82rem;
+    color: var(--c-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .link-arrow {
+    font-size: 1.05rem;
+    color: var(--c-blue);
+    flex-shrink: 0;
+    margin-left: 14px;
+    transition: transform 0.2s;
+  }
+
+  .link-card:hover .link-arrow { transform: translateX(4px); }
+
+  /* YouTube 主 CTA — ブランドグラデ */
+  .link-yt {
+    background: var(--grad-brand);
+    border: none;
+    align-self: stretch;
+    padding: 40px 32px;
+    --sweep-color: rgba(255, 255, 255, 0.95);
+  }
+
+  .link-yt .link-platform {
+    color: #fff;
+    font-size: 1.5rem;
+    text-shadow: 0 1px 10px rgba(12, 35, 64, 0.25);
+  }
+
+  .link-yt .link-desc {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .link-yt .link-arrow { color: #fff; }
+
+  .link-yt:hover,
+  .link-yt:focus-visible {
+    box-shadow: 0 16px 40px rgba(43, 124, 217, 0.35);
+  }
+
+  .link-guide .link-platform { color: var(--c-muted); font-size: 0.92rem; }
+
+  /* ============================================================
+     04 Guideline
+  ============================================================ */
+  .guideline-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 26px 30px;
+  }
+
+  .guideline-badge {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #8a5f1d;
+    border: 1px solid rgba(217, 162, 72, 0.5);
+    background: rgba(217, 162, 72, 0.08);
+    border-radius: 4px;
+    padding: 4px 10px;
+    margin-top: 2px;
+  }
+
+  .guideline-badge--ok {
+    color: #10645e;
+    border-color: rgba(82, 211, 168, 0.6);
+    background: rgba(82, 211, 168, 0.1);
+  }
+
+  .guideline-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .guideline-lead {
+    margin: 0;
+    color: var(--c-ink);
+    font-size: 0.94rem;
+    line-height: 2;
+  }
+
+  .guideline-link {
+    align-self: flex-start;
+    color: var(--c-blue-deep);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border-bottom: 1.5px solid rgba(43, 124, 217, 0.4);
+    padding-bottom: 2px;
+    transition: border-color 0.18s, color 0.18s;
+  }
+
+  .guideline-link:hover,
+  .guideline-link:focus-visible {
+    color: var(--c-cyan-text);
+    border-bottom-color: var(--c-cyan);
+  }
+
+  /* ============================================================
+     Reference Room banner
+  ============================================================ */
+  .ref-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 36px 40px;
+    background-color: transparent;
+    background-image: var(--grad-brand);
+    border-radius: 12px;
+    text-decoration: none;
+    overflow: hidden;
+    box-shadow: 0 14px 40px rgba(43, 124, 217, 0.28);
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+
+  .ref-banner.circuit-white {
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='460' viewBox='0 0 460 460' fill='none' stroke='%23ffffff' stroke-width='1.6' opacity='0.2'%3E%3Cpath d='M20 60h150l40 40h120'/%3E%3Ccircle cx='340' cy='100' r='3.4'/%3E%3Cpath d='M60 400V280l30-30V180'/%3E%3Ccircle cx='90' cy='176' r='3.4'/%3E%3Cpath d='M420 200v110l-40 40'/%3E%3Ccircle cx='376' cy='354' r='3.4'/%3E%3C/svg%3E"),
+      var(--grad-brand);
+    background-size: 460px 460px, cover;
+  }
+
+  .ref-banner:hover,
+  .ref-banner:focus-visible {
+    box-shadow: 0 20px 52px rgba(43, 124, 217, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* 内側の白フレームライン */
+  .rb-frame {
+    position: absolute;
+    inset: 10px;
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  .rb-frame::before {
+    content: "";
+    position: absolute;
+    top: -1.5px;
+    left: -1.5px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.85);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  .rb-text { position: relative; }
+
+  .rb-label {
+    margin: 0 0 6px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .rb-title {
+    margin: 0 0 8px;
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.12em;
+    text-shadow: 0 1px 12px rgba(12, 35, 64, 0.3);
+  }
+
+  .rb-desc {
+    margin: 0;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: 0.04em;
+  }
+
+  .rb-chevrons {
+    position: relative;
+    color: #fff;
+    flex-shrink: 0;
+    margin-right: 8px;
+    transition: transform 0.25s;
+  }
+
+  .ref-banner:hover .rb-chevrons { transform: translateX(6px); }
+
+  /* ============================================================
+     Responsive
+  ============================================================ */
+  @media (max-width: 900px) {
+    .hero-container {
+      grid-template-columns: 1fr;
+      padding-top: 30px;
+    }
+
+    .hero { min-height: auto; padding-bottom: 70px; }
+
+    .hero-logo { max-width: 440px; }
+
+    .hero-visual { margin-top: 8px; }
+
+    .hero-moon { width: 120px; height: 120px; opacity: 0.5; }
+
+    .profile-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  @media (max-width: 600px) {
+    :root { --space-section: 64px; }
+
+    .sp-only { display: inline; }
+
+    .hero-frame { inset: calc(var(--header-h) + 10px) 10px 10px; }
+    .hf-rail { display: none; }
+
+    .profile-panel { padding: 26px 20px; }
+
+    .dl-row {
+      grid-template-columns: 1fr;
+      gap: 2px;
+      padding: 10px 0;
+    }
+
+    .activity-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .activity-card { grid-column: span 1; padding: 22px 14px 20px; }
+    .activity-card:nth-child(4) { grid-column: span 1; }
+    .activity-card:nth-child(5) { grid-column: 1 / -1; }
+
+    .links-layout { grid-template-columns: 1fr; }
+    .link-yt { padding: 30px 24px; }
+    .link-card { padding: 18px 18px; }
+
+    .guideline-card { flex-direction: column; gap: 12px; }
+
+    .ref-banner { padding: 28px 22px; }
+    .rb-chevrons { display: none; }
+  }
+</style>

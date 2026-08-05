@@ -1,0 +1,534 @@
+/* ============================================================
+   Moonlight White Tiger Project — Design System
+   ============================================================
+   月白コハクブランド共通のデザイントークンとUIコンポーネント。
+   公式サイト・各アプリ（apps/）から読み込んで使用する。
+
+   使い方:
+     <link rel="stylesheet" href="/brand/brand.css" />
+
+   ドキュメント: docs/design-system.md
+   ============================================================ */
+
+/* ============================================================
+   1. Design Tokens
+   資料・ロゴから抽出:
+     月白 / 深いネイビー / シアン〜ブルーのグラデ / 琥珀(アクセント)
+============================================================ */
+:root {
+  /* base */
+  --c-bg:        #f4fafc;   /* 月白色 */
+  --c-panel:     #ffffff;
+  --c-navy:      #0c2340;   /* 深いネイビー（ロゴ文字色） */
+  --c-ink:       #17324f;   /* 本文 */
+  --c-muted:     #54718a;
+  --c-moon:      #eef8fc;
+
+  /* brand chromatics */
+  --c-teal:      #52d3a8;
+  --c-cyan:      #38c3e2;
+  --c-blue:      #2b7cd9;
+  --c-blue-deep: #1c5cb8;
+  --c-cyan-text: #0f7fa8;   /* 小さな文字用の読めるシアン */
+  --c-amber:     #d9a248;   /* 琥珀 — アクセントのみ */
+
+  /* gradients（資料背景・青枠と同じ流れ） */
+  --grad-brand:  linear-gradient(115deg, #62d8ac 0%, #38c3e2 46%, #2b7cd9 100%);
+  --grad-frame:  linear-gradient(115deg, #45cfd6 0%, #2b7cd9 100%);
+  --grad-hairline: linear-gradient(to right, #52d3a8, #38c3e2, #2b7cd9);
+
+  /* structure */
+  --border-frame:  1px solid rgba(43, 124, 217, 0.22);
+  --border-dim:    1px solid rgba(43, 124, 217, 0.12);
+  --radius-card:   10px;
+  --header-h:      60px;
+  --space-section: 112px;
+  --shadow-panel:  0 10px 34px rgba(12, 47, 84, 0.08);
+  --shadow-hover:  0 16px 44px rgba(43, 124, 217, 0.2), 0 0 18px rgba(56, 195, 226, 0.14);
+
+  --font-mono: "Consolas", "SFMono-Regular", "Courier New", monospace;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", sans-serif;
+}
+
+/* アニメーション抑制（全プロダクト共通） */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ============================================================
+   2. Layout primitives
+============================================================ */
+.container {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  padding: 0 26px;
+}
+
+.section {
+  padding: var(--space-section) 0;
+  position: relative;
+  overflow: clip;
+  scroll-margin-top: var(--header-h);
+}
+
+.section-compact { padding: 72px 0; }
+
+/* ============================================================
+   3. 資料パネル（設定資料のフレーム言語を継承したカード）
+============================================================ */
+.doc-panel {
+  position: relative;
+  background: var(--c-panel);
+  border: var(--border-frame);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-panel);
+}
+
+/* コーナー装飾（HUDブラケット） */
+.hud-corners::before,
+.hud-corners::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+.hud-corners::before {
+  top: -2px;
+  left: -2px;
+  border-top: 2.5px solid var(--c-cyan);
+  border-left: 2.5px solid var(--c-cyan);
+  border-top-left-radius: 8px;
+}
+.hud-corners::after {
+  bottom: -2px;
+  right: -2px;
+  border-bottom: 2.5px solid var(--c-blue);
+  border-right: 2.5px solid var(--c-blue);
+  border-bottom-right-radius: 8px;
+}
+
+/* 斜めスラッシュバー（資料フレーム上部の ▰▰▰▰ 装飾） */
+.hud-slash {
+  display: inline-block;
+  height: 10px;
+  background: repeating-linear-gradient(
+    -60deg,
+    var(--c-cyan) 0 8px,
+    transparent 8px 15px
+  );
+  opacity: 0.75;
+  border-radius: 2px;
+}
+
+.hud-slash--white {
+  background: repeating-linear-gradient(
+    -60deg,
+    rgba(255, 255, 255, 0.92) 0 8px,
+    transparent 8px 15px
+  );
+}
+
+/* シェブロン 》》》（ロゴ・資料の矢印モチーフ） */
+.hud-chevrons {
+  display: inline-flex;
+  gap: 5px;
+}
+.hud-chevrons i {
+  width: 12px;
+  height: 14px;
+  background: currentColor;
+  clip-path: polygon(0 0, 45% 0, 100% 50%, 45% 100%, 0 100%, 55% 50%);
+}
+
+/* ホバー時に上辺を走る光のライン（近未来UI） */
+.hud-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.hud-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -45%;
+  width: 45%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--sweep-color, rgba(56, 195, 226, 0.9)),
+    transparent
+  );
+  opacity: 0;
+  transition: left 0.55s ease, opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.hud-sweep:hover::after,
+.hud-sweep:focus-visible::after,
+.hud-sweep:focus-within::after {
+  left: 100%;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-sweep::after { display: none; }
+}
+
+/* 回路ライン背景（シアン / ホワイト） */
+.circuit-cyan {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='460' viewBox='0 0 460 460' fill='none' stroke='%232b7cd9' stroke-width='1.6'%3E%3Cpath d='M20 60h150l40 40h120'/%3E%3Ccircle cx='340' cy='100' r='3.4'/%3E%3Cpath d='M60 400V280l30-30V180'/%3E%3Ccircle cx='90' cy='176' r='3.4'/%3E%3Cpath d='M420 200v110l-40 40'/%3E%3Ccircle cx='376' cy='354' r='3.4'/%3E%3Crect x='16' y='56' width='7' height='7' fill='%232b7cd9' stroke='none'/%3E%3Crect x='416' y='196' width='7' height='7' fill='%232b7cd9' stroke='none'/%3E%3Cpath d='M220 430h120'/%3E%3Ccircle cx='346' cy='430' r='3.4'/%3E%3C/svg%3E");
+  background-size: 460px 460px;
+}
+
+.circuit-white {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='460' viewBox='0 0 460 460' fill='none' stroke='%23ffffff' stroke-width='1.6'%3E%3Cpath d='M20 60h150l40 40h120'/%3E%3Ccircle cx='340' cy='100' r='3.4'/%3E%3Cpath d='M60 400V280l30-30V180'/%3E%3Ccircle cx='90' cy='176' r='3.4'/%3E%3Cpath d='M420 200v110l-40 40'/%3E%3Ccircle cx='376' cy='354' r='3.4'/%3E%3Crect x='16' y='56' width='7' height='7' fill='%23ffffff' stroke='none'/%3E%3Crect x='416' y='196' width='7' height='7' fill='%23ffffff' stroke='none'/%3E%3Cpath d='M220 430h120'/%3E%3Ccircle cx='346' cy='430' r='3.4'/%3E%3C/svg%3E");
+  background-size: 460px 460px;
+}
+
+/* ============================================================
+   4. セクション見出し（資料シートのタイトル形式）
+      [NO.01] 見出し ／ EN LABEL ▰▰▰▰
+============================================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.sec-no {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: #fff;
+  background: var(--grad-frame);
+  padding: 5px 12px 4px;
+  border-radius: 4px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  white-space: nowrap;
+}
+
+.sec-titles {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.sec-ja {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.4vw, 2.05rem);
+  color: var(--c-navy);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sec-en {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--c-cyan-text);
+}
+
+.sec-line {
+  flex: 1 1 60px;
+  height: 10px;
+  min-width: 60px;
+  background: repeating-linear-gradient(
+    -60deg,
+    rgba(43, 124, 217, 0.35) 0 8px,
+    transparent 8px 15px
+  );
+  border-radius: 2px;
+}
+
+/* ============================================================
+   5. ボタン（HUDシステムUI）
+      .mwt-btn + .mwt-btn--primary / --secondary / --ghost
+============================================================ */
+.mwt-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 13px 34px;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: background 0.2s, color 0.2s, box-shadow 0.25s, transform 0.2s;
+}
+
+/* ホバー時に流れる光 */
+.mwt-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 40%,
+    var(--btn-shine, rgba(255, 255, 255, 0.45)) 50%,
+    transparent 60%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+
+.mwt-btn:hover::after,
+.mwt-btn:focus-visible::after {
+  transform: translateX(130%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mwt-btn::after { display: none; }
+}
+
+.mwt-btn--primary {
+  background: var(--grad-frame);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(43, 124, 217, 0.28);
+}
+
+.mwt-btn--primary:hover,
+.mwt-btn--primary:focus-visible {
+  box-shadow:
+    0 12px 30px rgba(43, 124, 217, 0.4),
+    0 0 18px rgba(56, 195, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.mwt-btn--navy {
+  background: var(--c-navy);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(56, 195, 226, 0.35);
+}
+
+.mwt-btn--navy:hover,
+.mwt-btn--navy:focus-visible {
+  background: #143156;
+  box-shadow:
+    inset 0 0 0 1px rgba(127, 231, 242, 0.85),
+    0 8px 22px rgba(12, 35, 64, 0.3);
+  transform: translateY(-2px);
+}
+
+.mwt-btn--secondary {
+  background: var(--c-panel);
+  color: var(--c-navy);
+  --btn-shine: rgba(56, 195, 226, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(43, 124, 217, 0.3);
+}
+
+.mwt-btn--secondary:hover,
+.mwt-btn--secondary:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(43, 124, 217, 0.6),
+    0 8px 20px rgba(12, 35, 64, 0.16);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   6. タグ / バッジ / チップ
+============================================================ */
+/* モノスペースの管理番号タグ（REF-01 など） */
+.mwt-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: var(--grad-frame);
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.mwt-tag--navy { background: var(--c-navy); }
+
+/* 状態バッジ */
+.mwt-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  border-radius: 4px;
+  padding: 4px 10px;
+  border: 1px solid;
+}
+
+.mwt-badge--amber {
+  color: #8a5f1d;
+  border-color: rgba(217, 162, 72, 0.5);
+  background: rgba(217, 162, 72, 0.08);
+}
+
+.mwt-badge--ok {
+  color: #10645e;
+  border-color: rgba(82, 211, 168, 0.6);
+  background: rgba(82, 211, 168, 0.1);
+}
+
+.mwt-badge--blue {
+  color: var(--c-blue-deep);
+  border-color: rgba(43, 124, 217, 0.4);
+  background: rgba(43, 124, 217, 0.07);
+}
+
+/* 白ピルチップ（名前表記などグラデ背景上で使用） */
+.mwt-chip {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--c-navy);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  padding: 6px 16px;
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(12, 35, 64, 0.15);
+}
+
+/* ============================================================
+   7. インフォメーションパネル / 通知
+============================================================ */
+.mwt-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 20px;
+  background: rgba(43, 124, 217, 0.06);
+  border: 1px dashed rgba(43, 124, 217, 0.35);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--c-ink);
+  letter-spacing: 0.04em;
+}
+
+.mwt-note {
+  border-left: 3px solid rgba(217, 162, 72, 0.6);
+  background: rgba(217, 162, 72, 0.06);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 18px;
+  font-size: 0.92rem;
+  color: var(--c-ink);
+}
+
+/* ============================================================
+   8. モーダル（<dialog> 用）
+============================================================ */
+.mwt-modal {
+  border: none;
+  padding: 0;
+  border-radius: 12px;
+  background: var(--c-panel);
+  color: var(--c-ink);
+  box-shadow:
+    0 0 0 1.5px rgba(56, 195, 226, 0.5),
+    0 40px 100px rgba(4, 16, 34, 0.6);
+}
+
+.mwt-modal::backdrop {
+  background: rgba(6, 21, 42, 0.86);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.mwt-modal[open] {
+  animation: mwt-modal-in 0.32s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.mwt-modal[open]::backdrop {
+  animation: mwt-backdrop-in 0.32s ease;
+}
+
+@keyframes mwt-modal-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes mwt-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ============================================================
+   9. ローディング（三日月スピナー）
+============================================================ */
+.mwt-loading {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid rgba(56, 195, 226, 0.2);
+  border-top-color: var(--c-cyan);
+  animation: mwt-spin 0.9s linear infinite;
+}
+
+@keyframes mwt-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 三日月マーク（静的な装飾） */
+.mwt-crescent {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  box-shadow: inset -6px -2px 0 var(--c-amber);
+  transform: rotate(18deg);
+}
+
+/* ============================================================
+   10. スクロール出現アニメーション
+       JS側で .in-view を付与（website/src/layouts/BaseLayout.astro 参照）
+============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   11. ユーティリティ
+============================================================ */
+/* 公開前後で表示を切り替え（<html>.revealed と併用） */
+html:not(.revealed) .when-revealed { display: none !important; }
+html.revealed .when-sealed { display: none !important; }
+
+/* スクリーンリーダー専用テキスト */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

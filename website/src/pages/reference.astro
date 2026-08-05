@@ -1,0 +1,1682 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  categoryMeta,
+  getMaterialsByCategory,
+  getPreviewableMaterials,
+} from "../data/materials";
+import type { Category } from "../data/materials";
+import { REVEAL_LABEL } from "../data/release";
+
+const categories: Category[] = ["character", "brand", "media"];
+
+/** 公開前のグリッチ文字列を決定的に生成（括弧・空白は残して雰囲気を出す） */
+const GLITCH_GLYPHS = "▓▚█▞◢◤■◆▟▛";
+const scramble = (s: string) =>
+  Array.from(s)
+    .map((ch, i) =>
+      "［］（） 、。・".includes(ch)
+        ? ch
+        : GLITCH_GLYPHS[(ch.charCodeAt(0) + i * 7) % GLITCH_GLYPHS.length]
+    )
+    .join("");
+const previewMats = getPreviewableMaterials().map((m) => ({
+  id: m.id,
+  refNo: m.refNo ?? "",
+  preview: m.preview!,
+  thumb: m.thumb,
+  alt: m.alt,
+  title: m.title,
+  description: m.description,
+  isDownloadable: m.isDownloadable,
+  download: m.download,
+  contain: m.contain ?? false,
+  protected: m.protected ?? false,
+  dlName: m.download ? m.download.split("/").pop()!.replace(/\.enc$/, "") : null,
+}));
+---
+
+<BaseLayout
+  title="公式設定資料室 | 月白コハク 公式サイト"
+  description="月白コハクの公式設定資料室。三面図・立ち絵・装飾品・動物態の設定資料、公式ロゴ、カラーパレットを公式資料ビューアで公開しています。"
+>
+  <!-- ============================================================
+       Archive banner — 資料表紙（グラデ × 白HUDフレーム）
+  ============================================================ -->
+  <div class="arc-banner">
+    <div class="arc-bg circuit-white" aria-hidden="true"></div>
+    <div class="arc-frame" aria-hidden="true">
+      <span class="af-corner-cut"></span>
+      <span class="af-slash hud-slash hud-slash--white"></span>
+      <span class="af-chevrons hud-chevrons"><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    <div class="container arc-inner">
+      <nav aria-label="パンくず" class="arc-breadcrumb">
+        <a href="/">TOP</a>
+        <span aria-hidden="true">／</span>
+        <span aria-current="page">公式設定資料室</span>
+      </nav>
+
+      <p class="arc-en">OFFICIAL REFERENCE ARCHIVE</p>
+      <h1 class="arc-title">公式設定資料室</h1>
+      <p class="arc-desc">
+        月白コハクの公式設定資料・ブランド素材を資料ビューアで公開しています。<br />
+        素材の利用や二次創作については、<a href="/guideline" class="arc-desc-link">二次創作ガイドライン</a>をご確認ください。
+      </p>
+
+      <div class="arc-index" role="list" aria-label="資料カテゴリ">
+        {categories.map((cat) => {
+          const meta = categoryMeta[cat];
+          const count = getMaterialsByCategory(cat).length;
+          return (
+            <a role="listitem" class="arc-chip" href={`#cat-${cat}`}>
+              <span class="chip-num">{meta.num}</span>
+              <span class="chip-ja">{meta.ja}</span>
+              <span class="chip-count">{count}</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Archive body
+  ============================================================ -->
+  <main id="main">
+    {
+      categories.map((cat) => {
+        const meta = categoryMeta[cat];
+        const mats = getMaterialsByCategory(cat);
+        return (
+          <section class="section arc-section" id={`cat-${cat}`}>
+            <div class="container">
+              <div class="section-header reveal">
+                <span class="sec-no">NO.{meta.num}</span>
+                <div class="sec-titles">
+                  <h2 class="sec-ja">{meta.ja}</h2>
+                  <p class="sec-en">{meta.en}</p>
+                </div>
+                <span class="sec-line" aria-hidden="true"></span>
+              </div>
+              {meta.note && <p class="arc-note reveal">{meta.note}</p>}
+              {cat === "character" && (
+                <p class="gate-note when-sealed">
+                  <span class="gate-note-crescent" aria-hidden="true"></span>
+                  キャラクター設定資料は <strong>{REVEAL_LABEL}</strong> に公開予定です
+                </p>
+              )}
+              {cat === "character" && (
+                <a
+                  href="/assets/downloads/tsukishiro-kohaku-reference-all.pdf"
+                  download
+                  class="bulk-dl reveal when-revealed"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  設定資料一式をPDFでダウンロード
+                  <span class="bulk-dl-meta">PDF / 全9枚 / 約3.5MB</span>
+                </a>
+              )}
+
+              <div class="mat-grid">
+                {mats.map((mat) => {
+                  const hasPreview = !!mat.preview;
+                  const hasSwatches = !!mat.swatches?.length;
+                  const thumbSrc = mat.thumb ?? mat.preview;
+
+                  if (hasSwatches) {
+                    /* カラーパレットカード */
+                    return (
+                      <div class="mat-card mat-card--palette doc-panel hud-corners reveal">
+                        <div class="mat-head">
+                          <span class="mat-no">{mat.refNo}</span>
+                          <span class="mat-head-title">{mat.title}</span>
+                          <span class="mat-head-slash hud-slash" aria-hidden="true"></span>
+                        </div>
+                        <div class="palette-grid">
+                          {mat.swatches!.map((sw) => (
+                            <div class="palette-item">
+                              <span
+                                class="palette-swatch"
+                                style={`background:${sw.hex}`}
+                              ></span>
+                              <span class="palette-name">{sw.name}</span>
+                              <span class="palette-en">{sw.en}</span>
+                              <span class="palette-hex">{sw.hex}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <p class="mat-desc mat-desc--pad">{mat.description}</p>
+                      </div>
+                    );
+                  }
+
+                  if (!hasPreview) {
+                    /* 準備中カード */
+                    return (
+                      <div class="mat-card mat-card--pending doc-panel reveal">
+                        <div class="mat-thumb mat-thumb--pending">
+                          <span class="pending-crescent" aria-hidden="true"></span>
+                          <span class="pending-text">準備中</span>
+                        </div>
+                        <div class="mat-info">
+                          <p class="mat-title">{mat.title}</p>
+                          <p class="mat-desc">{mat.description}</p>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  /* 資料ビューアカード */
+                  const isChar = cat === "character";
+                  const isProtected = !!mat.protected;
+                  return (
+                    <button
+                      type="button"
+                      class={`mat-card mat-card--doc doc-panel reveal hud-sweep ${mat.contain ? "mat-card--logo" : ""} ${isProtected ? "mat-card--protected" : ""}`}
+                      data-preview-id={mat.id}
+                      disabled={isChar}
+                      aria-label={isChar ? "未公開の設定資料" : `${mat.title} を資料ビューアで表示`}
+                    >
+                      <div class="mat-head">
+                        <span class="mat-no">{mat.refNo}</span>
+                        <span class="mat-head-title">
+                          {isChar ? (
+                            <>
+                              <span class="glitch-text when-sealed" aria-hidden="true">{scramble(mat.title)}</span>
+                              <span class="sr-only when-sealed">未公開資料</span>
+                              <span class="when-revealed">{mat.title}</span>
+                            </>
+                          ) : (
+                            mat.title
+                          )}
+                        </span>
+                        <span class="mat-head-slash hud-slash" aria-hidden="true"></span>
+                        {isProtected && (
+                          <span class="mat-lock" aria-hidden="true">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                              <rect x="4" y="11" width="16" height="10" rx="2" />
+                              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                            </svg>
+                          </span>
+                        )}
+                        {mat.isDownloadable && (
+                          <span class={`mat-pdf ${isChar ? "when-revealed" : ""}`}>PDF</span>
+                        )}
+                      </div>
+                      {isProtected ? (
+                        /* パスワード保護（復号するまで画像は存在しない） */
+                        <div class="mat-thumb mat-thumb--locked" data-locked-thumb={mat.id}>
+                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                            <rect x="4" y="11" width="16" height="10" rx="2" />
+                            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                          </svg>
+                          <span class="lock-text">PASSWORD PROTECTED</span>
+                          <span class="lock-sub when-revealed">クリックして解除</span>
+                          <span class="lock-sub when-sealed">{REVEAL_LABEL} 公開</span>
+                        </div>
+                      ) : isChar ? (
+                        /* 公開日時までは画像を読み込まない（公開後にJSが差し込む） */
+                        <div
+                          class="mat-thumb mat-thumb--gated"
+                          data-thumb={thumbSrc}
+                          data-alt={mat.alt}
+                        >
+                          <span class="gate-crescent" aria-hidden="true"></span>
+                          <span class="gate-text">COMING SOON</span>
+                          <span class="gate-date">{REVEAL_LABEL}</span>
+                        </div>
+                      ) : (
+                        <div class="mat-thumb">
+                          <img
+                            src={thumbSrc}
+                            alt={mat.alt}
+                            loading="lazy"
+                            class:list={[{ "img-contain": mat.contain }]}
+                          />
+                          <span class="mat-zoom" aria-hidden="true">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <circle cx="11" cy="11" r="8" />
+                              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                              <line x1="11" y1="8" x2="11" y2="14" />
+                              <line x1="8" y1="11" x2="14" y2="11" />
+                            </svg>
+                            VIEW
+                          </span>
+                        </div>
+                      )}
+                      <div class="mat-info">
+                        <p class="mat-desc">
+                          {isChar ? (
+                            <>
+                              <span class="glitch-text glitch-text--desc when-sealed" aria-hidden="true">{scramble(mat.description)}</span>
+                              <span class="when-revealed">{mat.description}</span>
+                            </>
+                          ) : (
+                            mat.description
+                          )}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        );
+      })
+    }
+
+    <!-- 注意事項 -->
+    <section class="section-compact">
+      <div class="container">
+        <div class="doc-panel arc-terms reveal">
+          <span class="terms-badge">NOTICE</span>
+          <ul class="terms-list">
+            <li>掲載資料の無断転載・再配布・自作発言はご遠慮ください。</li>
+            <li>素材の利用や二次創作については<a href="/guideline" class="terms-link">二次創作ガイドライン</a>をご確認ください。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       資料ビューア（モーダル）
+  ============================================================ -->
+  <dialog id="ref-modal" aria-modal="true" aria-label="資料ビューア">
+    <div class="modal-inner">
+      <div class="modal-head">
+        <span class="modal-head-label">REFERENCE VIEWER</span>
+        <span class="modal-no" id="modal-no"></span>
+        <span class="modal-head-slash hud-slash" aria-hidden="true"></span>
+        <button class="modal-close" id="modal-close" aria-label="閉じる">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-img-wrap">
+        <button class="modal-nav modal-prev" id="modal-prev" aria-label="前の資料へ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        <img id="modal-img" src="" alt="" class="modal-img" />
+        <button class="modal-nav modal-next" id="modal-next" aria-label="次の資料へ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-meta">
+        <div class="modal-texts">
+          <p id="modal-title" class="modal-title"></p>
+          <p id="modal-desc" class="modal-desc"></p>
+        </div>
+          <p class="modal-counter" id="modal-counter" aria-live="polite"></p>
+        <a id="modal-dl" href="#" download class="modal-dl" hidden>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          PDF ダウンロード
+        </a>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- パスワード入力（素体資料の復号） -->
+  <dialog id="pw-modal" aria-modal="true" aria-label="パスワード入力">
+    <form id="pw-form" class="pw-inner">
+      <span class="pw-corner" aria-hidden="true"></span>
+      <p class="pw-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+          <rect x="4" y="11" width="16" height="10" rx="2" />
+          <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+        </svg>
+        PROTECTED REFERENCE
+      </p>
+      <p class="pw-title">パスワードを入力してください</p>
+      <input
+        id="pw-input"
+        type="password"
+        autocomplete="off"
+        placeholder="Password"
+        required
+        aria-label="パスワード"
+      />
+      <p id="pw-error" class="pw-error" hidden>パスワードが違います</p>
+      <div class="pw-actions">
+        <button type="submit" class="pw-submit">解除する</button>
+        <button type="button" id="pw-cancel" class="pw-cancel">キャンセル</button>
+      </div>
+    </form>
+  </dialog>
+</BaseLayout>
+
+<script define:vars={{ previewMats }}>
+  const modal = document.getElementById("ref-modal");
+  const modalImg = document.getElementById("modal-img");
+  const modalNo = document.getElementById("modal-no");
+  const modalTitle = document.getElementById("modal-title");
+  const modalDesc = document.getElementById("modal-desc");
+  const modalDl = document.getElementById("modal-dl");
+  const modalCounter = document.getElementById("modal-counter");
+  const btnClose = document.getElementById("modal-close");
+  const btnPrev = document.getElementById("modal-prev");
+  const btnNext = document.getElementById("modal-next");
+
+  let currentIdx = 0;
+
+  /* ============================================================
+     公開日時ゲート
+     公開前はサムネイル画像を読み込まず、カードも無効化。
+     <html>.revealed が付いた時点で画像を差し込み解放する。
+  ============================================================ */
+  function applyReveal() {
+    document.querySelectorAll("[data-thumb]").forEach((el) => {
+      const img = document.createElement("img");
+      img.src = el.dataset.thumb;
+      img.alt = el.dataset.alt || "";
+      img.loading = "lazy";
+      el.classList.remove("mat-thumb--gated");
+      el.replaceChildren(img);
+    });
+    document.querySelectorAll("button.mat-card[disabled]").forEach((b) => {
+      b.removeAttribute("disabled");
+      const mat = previewMats.find((m) => m.id === b.dataset.previewId);
+      if (mat) b.setAttribute("aria-label", `${mat.title} を資料ビューアで表示`);
+    });
+  }
+
+  if (document.documentElement.classList.contains("revealed")) {
+    applyReveal();
+  } else {
+    const mo = new MutationObserver(() => {
+      if (document.documentElement.classList.contains("revealed")) {
+        mo.disconnect();
+        applyReveal();
+      }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  }
+
+  /* ============================================================
+     パスワード保護（AES-256-GCM / PBKDF2）
+     .enc = [salt 16B][iv 12B][暗号文+認証タグ]
+     パスワードが違うと復号自体が失敗する。
+  ============================================================ */
+  const unlocked = {};
+  let savedPw = null;
+
+  async function decryptToBlobUrl(url, pw, mime) {
+    const buf = new Uint8Array(await (await fetch(url)).arrayBuffer());
+    const salt = buf.slice(0, 16);
+    const iv = buf.slice(16, 28);
+    const data = buf.slice(28);
+    const keyMaterial = await crypto.subtle.importKey(
+      "raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]
+    );
+    const key = await crypto.subtle.deriveKey(
+      { name: "PBKDF2", salt, iterations: 150000, hash: "SHA-256" },
+      keyMaterial,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["decrypt"]
+    );
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
+    return URL.createObjectURL(new Blob([plain], { type: mime }));
+  }
+
+  async function unlockMat(mat, pw) {
+    const img = await decryptToBlobUrl(mat.preview, pw, "image/jpeg");
+    const thumb = mat.thumb ? await decryptToBlobUrl(mat.thumb, pw, "image/jpeg") : img;
+    const pdf = mat.download
+      ? await decryptToBlobUrl(mat.download, pw, "application/pdf")
+      : null;
+    unlocked[mat.id] = { img, thumb, pdf };
+    savedPw = pw;
+    const holder = document.querySelector(`[data-locked-thumb="${mat.id}"]`);
+    if (holder) {
+      const im = document.createElement("img");
+      im.src = thumb;
+      im.alt = mat.alt;
+      holder.classList.remove("mat-thumb--locked");
+      holder.replaceChildren(im);
+    }
+  }
+
+  /* --- パスワードダイアログ --- */
+  const pwModal = document.getElementById("pw-modal");
+  const pwForm = document.getElementById("pw-form");
+  const pwInput = document.getElementById("pw-input");
+  const pwError = document.getElementById("pw-error");
+  const pwCancel = document.getElementById("pw-cancel");
+  let pwTargetId = null;
+
+  function openPw(id) {
+    pwTargetId = id;
+    pwError.hidden = true;
+    pwInput.value = "";
+    pwModal.showModal();
+  }
+
+  pwForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const mat = previewMats.find((m) => m.id === pwTargetId);
+    const pw = pwInput.value;
+    if (!mat || !pw) return;
+    pwForm.classList.add("busy");
+    try {
+      await unlockMat(mat, pw);
+      pwModal.close();
+      openModal(mat.id);
+    } catch {
+      pwError.hidden = false;
+      pwInput.select();
+    } finally {
+      pwForm.classList.remove("busy");
+    }
+  });
+
+  pwCancel.addEventListener("click", () => pwModal.close());
+  pwModal.addEventListener("click", (e) => {
+    if (e.target === pwModal) pwModal.close();
+  });
+
+  /* ============================================================
+     資料ビューア
+  ============================================================ */
+  function openModal(id) {
+    const idx = previewMats.findIndex((m) => m.id === id);
+    if (idx === -1) return;
+    const mat = previewMats[idx];
+    if (mat.protected && !unlocked[mat.id]) {
+      // 同一セッションで解除済みならそのパスワードで自動解除
+      if (savedPw) {
+        unlockMat(mat, savedPw)
+          .then(() => openModal(id))
+          .catch(() => openPw(id));
+      } else {
+        openPw(id);
+      }
+      return;
+    }
+    currentIdx = idx;
+    renderModal();
+    modal.showModal();
+  }
+
+  function viewable(m) {
+    return !m.protected || !!unlocked[m.id];
+  }
+
+  function renderModal() {
+    const mat = previewMats[currentIdx];
+    modalImg.src = mat.protected ? unlocked[mat.id].img : mat.preview;
+    modalImg.alt = mat.alt;
+    modalImg.classList.toggle("modal-img--contain", mat.contain);
+    modalNo.textContent = mat.refNo;
+    modalNo.hidden = !mat.refNo;
+    modalTitle.textContent = mat.title;
+    modalDesc.textContent = mat.description;
+    if (mat.isDownloadable && mat.download) {
+      if (mat.protected) {
+        modalDl.href = unlocked[mat.id].pdf;
+        modalDl.setAttribute("download", mat.dlName || "reference.pdf");
+      } else {
+        modalDl.href = mat.download;
+        modalDl.setAttribute("download", "");
+      }
+      modalDl.hidden = false;
+    } else {
+      modalDl.hidden = true;
+    }
+    const total = previewMats.length;
+    modalCounter.textContent = `${String(currentIdx + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+    btnPrev.disabled = !previewMats.slice(0, currentIdx).some(viewable);
+    btnNext.disabled = !previewMats.slice(currentIdx + 1).some(viewable);
+  }
+
+  function navigate(dir) {
+    let next = currentIdx + dir;
+    // ロック中の保護資料はスキップ
+    while (next >= 0 && next < previewMats.length && !viewable(previewMats[next])) {
+      next += dir;
+    }
+    if (next < 0 || next >= previewMats.length) return;
+    currentIdx = next;
+    renderModal();
+  }
+
+  document.querySelectorAll("[data-preview-id]").forEach((card) => {
+    card.addEventListener("click", () => openModal(card.dataset.previewId));
+  });
+
+  btnClose.addEventListener("click", () => modal.close());
+  btnPrev.addEventListener("click", () => navigate(-1));
+  btnNext.addEventListener("click", () => navigate(1));
+
+  // 背景クリックで閉じる
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.close();
+  });
+
+  // キーボード操作（← →）
+  modal.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") navigate(-1);
+    if (e.key === "ArrowRight") navigate(1);
+  });
+</script>
+
+<style>
+  /* ============================================================
+     Archive banner
+  ============================================================ */
+  .arc-banner {
+    position: relative;
+    padding-top: var(--header-h);
+    background: var(--grad-brand);
+    overflow: hidden;
+  }
+
+  .arc-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  .arc-frame {
+    position: absolute;
+    inset: calc(var(--header-h) + 14px) 18px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+
+  .af-corner-cut {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.9);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    border-top-left-radius: 8px;
+  }
+
+  .af-slash {
+    position: absolute;
+    top: 12px;
+    right: 7%;
+    width: min(280px, 32%);
+  }
+
+  .af-chevrons {
+    position: absolute;
+    left: 24px;
+    bottom: 14px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .arc-inner {
+    position: relative;
+    z-index: 1;
+    padding-top: 58px;
+    padding-bottom: 66px;
+  }
+
+  .arc-breadcrumb {
+    display: flex;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 34px;
+  }
+
+  .arc-breadcrumb a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 1px;
+    transition: border-color 0.18s;
+  }
+
+  .arc-breadcrumb a:hover,
+  .arc-breadcrumb a:focus-visible {
+    border-bottom-color: #fff;
+  }
+
+  .arc-en {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.34em;
+    color: #fff;
+    text-shadow: 0 1px 10px rgba(12, 35, 64, 0.3);
+  }
+
+  .arc-title {
+    margin: 0 0 16px;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--c-navy);
+    line-height: 1.3;
+  }
+
+  .arc-desc {
+    margin: 0 0 30px;
+    font-size: 0.94rem;
+    color: var(--c-navy);
+    line-height: 2.05;
+    max-width: 580px;
+  }
+
+  .arc-desc-link {
+    color: var(--c-navy);
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1.5px solid rgba(12, 35, 64, 0.45);
+    padding-bottom: 1px;
+    transition: border-color 0.18s;
+  }
+
+  .arc-desc-link:hover,
+  .arc-desc-link:focus-visible {
+    border-bottom-color: var(--c-navy);
+  }
+
+  .terms-link {
+    color: var(--c-blue-deep);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(43, 124, 217, 0.4);
+    transition: border-color 0.18s;
+  }
+
+  .terms-link:hover,
+  .terms-link:focus-visible {
+    border-bottom-color: var(--c-blue);
+  }
+
+  /* カテゴリインデックス（資料の目次チップ） */
+  .arc-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .arc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 999px;
+    padding: 7px 16px 7px 8px;
+    text-decoration: none;
+    box-shadow: 0 3px 12px rgba(12, 35, 64, 0.16);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .arc-chip:hover,
+  .arc-chip:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(12, 35, 64, 0.22);
+  }
+
+  .chip-num {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    color: #fff;
+    background: var(--c-navy);
+    border-radius: 999px;
+    padding: 3px 9px;
+    letter-spacing: 0.1em;
+  }
+
+  .chip-ja {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.08em;
+  }
+
+  .chip-count {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--c-cyan-text);
+  }
+
+  /* ============================================================
+     Sections
+  ============================================================ */
+  .arc-section { scroll-margin-top: calc(var(--header-h) + 10px); }
+
+  .arc-note {
+    margin: -26px 0 30px;
+    font-size: 0.88rem;
+    color: var(--c-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* 一括ダウンロードボタン（主要導線） */
+  .bulk-dl {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: -14px 0 32px;
+    padding: 13px 26px;
+    border-radius: 8px;
+    background: var(--grad-frame);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(43, 124, 217, 0.28);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: box-shadow 0.25s, transform 0.2s;
+  }
+
+  /* ホバー時に流れる光 */
+  .bulk-dl::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.4) 50%, transparent 60%);
+    transform: translateX(-130%);
+    transition: transform 0.55s ease;
+    pointer-events: none;
+  }
+
+  .bulk-dl:hover::after,
+  .bulk-dl:focus-visible::after {
+    transform: translateX(130%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bulk-dl::after { display: none; }
+  }
+
+  .bulk-dl:hover,
+  .bulk-dl:focus-visible {
+    box-shadow:
+      0 14px 34px rgba(43, 124, 217, 0.4),
+      0 0 18px rgba(56, 195, 226, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .bulk-dl-meta {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    padding-left: 10px;
+  }
+
+  /* ============================================================
+     Material grid
+  ============================================================ */
+  .mat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── 資料カード共通 ── */
+  .mat-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    padding: 0;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  button.mat-card { cursor: pointer; }
+
+  .mat-card--doc:hover,
+  .mat-card--doc:focus-visible {
+    border-color: rgba(56, 195, 226, 0.7);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .mat-card--doc:hover .mat-zoom,
+  .mat-card--doc:focus-visible .mat-zoom {
+    opacity: 1;
+  }
+
+  .mat-card--doc .mat-thumb img {
+    transition: transform 0.3s ease;
+  }
+
+  .mat-card--doc:hover .mat-thumb img,
+  .mat-card--doc:focus-visible .mat-thumb img {
+    transform: scale(1.03);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-card--doc .mat-thumb img { transition: none; }
+    .mat-card--doc:hover .mat-thumb img { transform: none; }
+  }
+
+  /* ヘッダー行（REF-No + タイトル + スラッシュ） */
+  .mat-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px 9px;
+    border-bottom: var(--border-dim);
+  }
+
+  .mat-no {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--grad-frame);
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .mat-head-title {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mat-head-slash {
+    flex: 1;
+    min-width: 14px;
+    height: 7px;
+    opacity: 0.35;
+  }
+
+  /* PDFダウンロード可バッジ */
+  .mat-pdf {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--grad-frame);
+    border-radius: 3px;
+    padding: 2px 7px;
+    white-space: nowrap;
+  }
+
+  /* サムネイル */
+  .mat-thumb {
+    position: relative;
+    aspect-ratio: 1800 / 1273;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* :global — JSで動的挿入する画像（公開ゲート解除・復号後）にも効かせる */
+  .mat-thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .mat-thumb img.img-contain {
+    object-fit: contain;
+    padding: 14px;
+  }
+
+  /* ロゴカードは薄いドット地で透過を見せる */
+  .mat-card--logo .mat-thumb {
+    background-image: radial-gradient(rgba(43, 124, 217, 0.14) 1px, transparent 1px);
+    background-size: 14px 14px;
+  }
+
+  .mat-zoom {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: #fff;
+    background: rgba(12, 35, 64, 0.78);
+    border-radius: 4px;
+    padding: 5px 9px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .mat-info {
+    padding: 11px 14px 13px;
+    border-top: var(--border-dim);
+  }
+
+  .mat-title {
+    margin: 0 0 4px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.05em;
+  }
+
+  .mat-desc {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--c-muted);
+    line-height: 1.8;
+  }
+
+  .mat-desc--pad { padding: 0 16px 16px; }
+
+  /* ── カラーパレットカード ── */
+  .mat-card--palette {
+    grid-column: 1 / -1;
+  }
+
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 14px;
+    padding: 18px 16px;
+  }
+
+  .palette-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .palette-swatch {
+    height: 58px;
+    border-radius: 6px;
+    border: 1px solid rgba(12, 35, 64, 0.1);
+    margin-bottom: 6px;
+  }
+
+  .palette-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.08em;
+  }
+
+  .palette-en {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    color: var(--c-cyan-text);
+  }
+
+  .palette-hex {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    color: var(--c-muted);
+  }
+
+  /* ── 公開前ゲート: グリッチ文字（読めない演出） ── */
+  .glitch-text {
+    display: inline-block;
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+    color: rgba(23, 50, 79, 0.72);
+    text-shadow:
+      1px 0 rgba(56, 195, 226, 0.75),
+      -1px 0 rgba(43, 124, 217, 0.5);
+    animation: glitch-jitter 2.8s steps(1) infinite;
+    user-select: none;
+  }
+
+  .glitch-text--desc {
+    color: rgba(84, 113, 138, 0.55);
+    font-size: 0.9em;
+    animation-duration: 3.7s;
+    animation-delay: -1.4s;
+  }
+
+  /* カードごとにタイミングをずらして機械的な同期を避ける */
+  .mat-card:nth-child(3n) .glitch-text { animation-delay: -0.9s; }
+  .mat-card:nth-child(3n + 1) .glitch-text { animation-delay: -1.8s; }
+  .mat-card:nth-child(3n + 1) .glitch-text--desc { animation-delay: -2.6s; }
+
+  @keyframes glitch-jitter {
+    0%, 86%, 100% {
+      transform: none;
+      opacity: 1;
+      text-shadow:
+        1px 0 rgba(56, 195, 226, 0.75),
+        -1px 0 rgba(43, 124, 217, 0.5);
+    }
+    88% {
+      transform: translateX(2px);
+      opacity: 0.55;
+      text-shadow:
+        -2px 0 rgba(56, 195, 226, 0.95),
+        2px 0 rgba(43, 124, 217, 0.7);
+    }
+    90% {
+      transform: translateX(-1.5px) skewX(-6deg);
+      opacity: 0.9;
+    }
+    93% {
+      transform: translateX(0.5px);
+      opacity: 0.7;
+      text-shadow:
+        2px 0 rgba(127, 231, 242, 0.9),
+        -2px 0 rgba(28, 92, 184, 0.7);
+    }
+    96% {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glitch-text { animation: none; }
+  }
+
+  /* ── 公開前ゲート ── */
+  .gate-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: -14px 0 32px;
+    padding: 13px 20px;
+    background: rgba(43, 124, 217, 0.06);
+    border: 1px dashed rgba(43, 124, 217, 0.35);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--c-ink);
+    letter-spacing: 0.04em;
+  }
+
+  .gate-note strong {
+    color: var(--c-blue-deep);
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+  }
+
+  .gate-note-crescent {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    box-shadow: inset -5px -2px 0 var(--c-amber);
+    transform: rotate(18deg);
+    flex-shrink: 0;
+  }
+
+  button.mat-card:disabled {
+    cursor: default;
+  }
+
+  button.mat-card:disabled:hover {
+    transform: none;
+    box-shadow: var(--shadow-panel);
+    border-color: rgba(43, 124, 217, 0.22);
+  }
+
+  .mat-thumb--gated {
+    flex-direction: column;
+    gap: 8px;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 40%, rgba(56, 195, 226, 0.1) 0%, transparent 70%),
+      linear-gradient(150deg, #0e2036 0%, #16324f 100%);
+  }
+
+  .gate-crescent {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow:
+      inset -8px -3px 0 rgba(255, 255, 255, 0.75),
+      0 0 18px rgba(127, 231, 242, 0.3);
+    transform: rotate(18deg);
+    margin-bottom: 4px;
+  }
+
+  .gate-text {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    color: #eaf6fc;
+  }
+
+  .gate-date {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    color: rgba(178, 216, 240, 0.75);
+  }
+
+  /* ── パスワード保護カード ── */
+  .mat-lock {
+    display: inline-flex;
+    color: var(--c-blue-deep);
+    flex-shrink: 0;
+  }
+
+  .mat-thumb--locked {
+    flex-direction: column;
+    gap: 7px;
+    color: #eaf6fc;
+    background:
+      repeating-linear-gradient(
+        -60deg,
+        rgba(255, 255, 255, 0.035) 0 10px,
+        transparent 10px 20px
+      ),
+      linear-gradient(150deg, #10253e 0%, #1a3a5c 100%);
+  }
+
+  .lock-text {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    color: #eaf6fc;
+  }
+
+  .lock-sub {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: rgba(178, 216, 240, 0.75);
+  }
+
+  /* ── 準備中カード ── */
+  .mat-card--pending { opacity: 0.85; }
+
+  .mat-thumb--pending {
+    flex-direction: column;
+    gap: 10px;
+    background:
+      repeating-linear-gradient(
+        -60deg,
+        rgba(43, 124, 217, 0.03) 0 10px,
+        transparent 10px 20px
+      );
+  }
+
+  .pending-crescent {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    box-shadow: inset -7px -2px 0 rgba(217, 162, 72, 0.55);
+    transform: rotate(18deg);
+  }
+
+  .pending-text {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--c-muted);
+  }
+
+  /* ============================================================
+     Notice
+  ============================================================ */
+  .arc-terms {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 24px 28px;
+  }
+
+  .terms-badge {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    color: #8a5f1d;
+    border: 1px solid rgba(217, 162, 72, 0.5);
+    background: rgba(217, 162, 72, 0.08);
+    border-radius: 4px;
+    padding: 4px 10px;
+    margin-top: 3px;
+  }
+
+  .terms-list {
+    margin: 0;
+    padding: 0 0 0 1.2em;
+    display: grid;
+    gap: 6px;
+  }
+
+  .terms-list li {
+    color: var(--c-ink);
+    font-size: 0.92rem;
+    line-height: 2;
+  }
+
+  /* ============================================================
+     資料ビューア（モーダル）
+  ============================================================ */
+  #ref-modal {
+    border: none;
+    padding: 0;
+    border-radius: 12px;
+    background: var(--c-panel);
+    color: var(--c-ink);
+    width: min(940px, 94vw);
+    max-height: 92dvh;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1.5px rgba(56, 195, 226, 0.5),
+      0 40px 100px rgba(4, 16, 34, 0.6);
+  }
+
+  #ref-modal::backdrop {
+    background: rgba(6, 21, 42, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* ビューアの登場アニメーション */
+  #ref-modal[open] {
+    animation: modal-in 0.32s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  #ref-modal[open]::backdrop {
+    animation: backdrop-in 0.32s ease;
+  }
+
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes backdrop-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .modal-inner {
+    display: flex;
+    flex-direction: column;
+    max-height: 92dvh;
+  }
+
+  /* ビューアヘッダー */
+  .modal-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px 11px 18px;
+    border-bottom: var(--border-dim);
+    background: linear-gradient(to right, rgba(82, 211, 168, 0.08), rgba(43, 124, 217, 0.08));
+  }
+
+  .modal-head-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    color: var(--c-cyan-text);
+    white-space: nowrap;
+  }
+
+  .modal-no {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--grad-frame);
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .modal-head-slash {
+    flex: 1;
+    height: 8px;
+    opacity: 0.35;
+  }
+
+  .modal-close {
+    width: 34px;
+    height: 34px;
+    border: var(--border-frame);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--c-navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+
+  .modal-close:hover,
+  .modal-close:focus-visible {
+    border-color: var(--c-cyan);
+    box-shadow: 0 0 12px rgba(56, 195, 226, 0.35);
+  }
+
+  /* 画像エリア */
+  .modal-img-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    background: var(--c-moon);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .modal-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .modal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border: var(--border-frame);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--c-navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 5;
+    transition: border-color 0.18s, box-shadow 0.18s, opacity 0.18s;
+  }
+
+  .modal-nav:hover:not(:disabled),
+  .modal-nav:focus-visible:not(:disabled) {
+    border-color: var(--c-cyan);
+    box-shadow: 0 0 14px rgba(56, 195, 226, 0.35);
+  }
+
+  .modal-nav:disabled { opacity: 0.25; cursor: default; }
+
+  .modal-prev { left: 14px; }
+  .modal-next { right: 14px; }
+
+  /* メタバー */
+  .modal-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 13px 20px;
+    border-top: var(--border-dim);
+    flex-shrink: 0;
+  }
+
+  .modal-texts { min-width: 0; }
+
+  .modal-title {
+    margin: 0 0 2px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .modal-desc {
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--c-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .modal-counter {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--c-cyan-text);
+    white-space: nowrap;
+  }
+
+  .modal-dl {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    background: var(--grad-frame);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    box-shadow: 0 4px 14px rgba(43, 124, 217, 0.25);
+    transition: box-shadow 0.2s, transform 0.18s;
+  }
+
+  .modal-dl:hover,
+  .modal-dl:focus-visible {
+    box-shadow:
+      0 8px 22px rgba(43, 124, 217, 0.38),
+      0 0 14px rgba(56, 195, 226, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .modal-dl[hidden] { display: none; }
+
+  /* ============================================================
+     パスワードダイアログ
+  ============================================================ */
+  #pw-modal {
+    border: none;
+    padding: 0;
+    border-radius: 10px;
+    background: var(--c-panel);
+    color: var(--c-ink);
+    width: min(380px, 90vw);
+    box-shadow:
+      0 0 0 1.5px rgba(56, 195, 226, 0.5),
+      0 30px 80px rgba(4, 16, 34, 0.6);
+  }
+
+  #pw-modal::backdrop {
+    background: rgba(6, 21, 42, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  #pw-modal[open] {
+    animation: modal-in 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  .pw-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 26px 28px 24px;
+  }
+
+  .pw-corner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--grad-frame);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    border-top-left-radius: 10px;
+  }
+
+  .pw-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    color: var(--c-cyan-text);
+  }
+
+  .pw-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.06em;
+  }
+
+  #pw-input {
+    font: inherit;
+    padding: 11px 14px;
+    border: 1.5px solid rgba(43, 124, 217, 0.35);
+    border-radius: 6px;
+    background: var(--c-moon);
+    color: var(--c-navy);
+    letter-spacing: 0.12em;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+
+  #pw-input:focus {
+    outline: none;
+    border-color: var(--c-cyan);
+    box-shadow: 0 0 12px rgba(56, 195, 226, 0.25);
+  }
+
+  .pw-error {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #b3462e;
+  }
+
+  .pw-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .pw-submit {
+    flex: 1;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.86rem;
+    letter-spacing: 0.08em;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 6px;
+    background: var(--grad-frame);
+    color: #fff;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    box-shadow: 0 4px 14px rgba(43, 124, 217, 0.25);
+    transition: box-shadow 0.2s, transform 0.18s;
+  }
+
+  .pw-submit:hover,
+  .pw-submit:focus-visible {
+    box-shadow: 0 8px 22px rgba(43, 124, 217, 0.38);
+    transform: translateY(-1px);
+  }
+
+  .pw-form.busy .pw-submit,
+  .pw-inner.busy .pw-submit {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .pw-cancel {
+    font: inherit;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    padding: 11px 16px;
+    border: 1px solid rgba(43, 124, 217, 0.3);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--c-muted);
+    cursor: pointer;
+    transition: border-color 0.18s, color 0.18s;
+  }
+
+  .pw-cancel:hover,
+  .pw-cancel:focus-visible {
+    border-color: var(--c-cyan);
+    color: var(--c-navy);
+  }
+
+  /* ============================================================
+     Responsive
+  ============================================================ */
+  @media (max-width: 600px) {
+    .arc-frame { inset: calc(var(--header-h) + 8px) 8px 8px; }
+
+    .arc-inner { padding-top: 44px; padding-bottom: 52px; }
+
+    .mat-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mat-head { padding: 8px 10px 7px; }
+    .mat-head-title { font-size: 0.7rem; }
+    .mat-info { padding: 9px 10px 11px; }
+
+    .palette-grid { grid-template-columns: repeat(3, 1fr); }
+
+    .modal-meta {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .modal-title,
+    .modal-desc { white-space: normal; }
+
+    .modal-nav { width: 36px; height: 36px; }
+
+    .arc-terms { flex-direction: column; gap: 12px; }
+  }
+</style>

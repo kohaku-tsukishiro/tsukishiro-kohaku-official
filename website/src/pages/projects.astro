@@ -1,0 +1,350 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+/**
+ * Moonlight White Tiger Project — プロダクト一覧
+ * 公開準備が整ったら url を設定し status を "live" に変更する。
+ */
+type ProjectStatus = "live" | "coming" | "dev" | "planned";
+
+interface Project {
+  no: string;
+  name: string;
+  en: string;
+  description: string;
+  status: ProjectStatus;
+  /** 公開済みの場合のみ設定 */
+  url?: string;
+  note?: string;
+}
+
+const projects: Project[] = [
+  {
+    no: "PRJ-01",
+    name: "けもケット 購入サポート",
+    en: "KEMOKET SUPPORT APP",
+    description:
+      "けもケット参加サークルの購入サポートWebアプリ。チェックリストで当日の買い回りをスマートに。",
+    // 紹介配信（2026.09.07-08予定）後に status を "live" へ変更するとリンクが有効になる
+    status: "coming",
+    url: "https://kohaku-tsukishiro.github.io/kemoke17/",
+    note: "2026.09 公開予定 — デビュー後の配信で紹介します",
+  },
+  {
+    no: "PRJ-02",
+    name: "RecallOS",
+    en: "RECALLOS",
+    description: "開発中のプロジェクト。詳細は続報をお待ちください。",
+    status: "dev",
+  },
+  {
+    no: "PRJ-03",
+    name: "配信用ツール",
+    en: "STREAMING TOOLS",
+    description: "配信をもっと楽しくする自作ツール群。順次公開予定。",
+    status: "planned",
+  },
+];
+
+const statusMeta: Record<ProjectStatus, { label: string; cls: string }> = {
+  live:    { label: "公開中",     cls: "st-live" },
+  coming:  { label: "COMING SOON", cls: "st-coming" },
+  dev:     { label: "開発中",     cls: "st-dev" },
+  planned: { label: "構想中",     cls: "st-planned" },
+};
+---
+
+<BaseLayout
+  title="Projects | 月白コハク 公式サイト"
+  description="Moonlight White Tiger Project — 月白コハクが制作するWebアプリ・配信用ツール・開発プロジェクトの一覧。"
+>
+  <!-- Banner -->
+  <div class="pj-banner">
+    <div class="pj-bg circuit-white" aria-hidden="true"></div>
+    <div class="pj-frame" aria-hidden="true">
+      <span class="pjf-corner-cut"></span>
+      <span class="pjf-slash hud-slash hud-slash--white"></span>
+      <span class="pjf-chevrons hud-chevrons"><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    <div class="container pj-inner">
+      <nav aria-label="パンくず" class="pj-breadcrumb">
+        <a href="/">TOP</a>
+        <span aria-hidden="true">／</span>
+        <span aria-current="page">Projects</span>
+      </nav>
+
+      <p class="pj-en">MOONLIGHT WHITE TIGER PROJECT</p>
+      <h1 class="pj-title">Projects</h1>
+      <p class="pj-desc">
+        月白コハクが制作しているWebアプリ・ツールの一覧です。<br />
+        技術と創作で、配信ももっと楽しく。
+      </p>
+    </div>
+  </div>
+
+  <main id="main">
+    <section class="section pj-section">
+      <div class="container">
+        <div class="pj-grid">
+          {projects.map((p) => {
+            const st = statusMeta[p.status];
+            const isLive = p.status === "live" && p.url;
+            const Tag = isLive ? "a" : "div";
+            return (
+              <Tag
+                class={`pj-card doc-panel reveal ${isLive ? "pj-card--live hud-sweep" : ""}`}
+                href={isLive ? p.url : undefined}
+              >
+                <div class="pj-head">
+                  <span class="mwt-tag">{p.no}</span>
+                  <span class="pj-head-slash hud-slash" aria-hidden="true"></span>
+                  <span class={`pj-status ${st.cls}`}>{st.label}</span>
+                </div>
+                <div class="pj-body">
+                  <p class="pj-name">{p.name}</p>
+                  <p class="pj-name-en">{p.en}</p>
+                  <p class="pj-desc-text">{p.description}</p>
+                  {p.note && <p class="pj-note">{p.note}</p>}
+                  {isLive && <span class="pj-open">アプリを開く →</span>}
+                </div>
+              </Tag>
+            );
+          })}
+        </div>
+
+        <div class="mwt-info pj-info reveal">
+          <span class="mwt-crescent" aria-hidden="true"></span>
+          <span>
+            ここに掲載するプロダクトは順次追加されます。最新情報は配信・Xでお知らせします。
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  /* ============================================================
+     Banner
+  ============================================================ */
+  .pj-banner {
+    position: relative;
+    padding-top: var(--header-h);
+    background: var(--grad-brand);
+    overflow: hidden;
+  }
+
+  .pj-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  .pj-frame {
+    position: absolute;
+    inset: calc(var(--header-h) + 14px) 18px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+
+  .pjf-corner-cut {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.9);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    border-top-left-radius: 8px;
+  }
+
+  .pjf-slash {
+    position: absolute;
+    top: 12px;
+    right: 7%;
+    width: min(280px, 32%);
+  }
+
+  .pjf-chevrons {
+    position: absolute;
+    left: 24px;
+    bottom: 14px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .pj-inner {
+    position: relative;
+    z-index: 1;
+    padding-top: 58px;
+    padding-bottom: 62px;
+  }
+
+  .pj-breadcrumb {
+    display: flex;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 34px;
+  }
+
+  .pj-breadcrumb a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 1px;
+    transition: border-color 0.18s;
+  }
+
+  .pj-breadcrumb a:hover,
+  .pj-breadcrumb a:focus-visible {
+    border-bottom-color: #fff;
+  }
+
+  .pj-en {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.34em;
+    color: #fff;
+    text-shadow: 0 1px 10px rgba(12, 35, 64, 0.3);
+  }
+
+  .pj-title {
+    margin: 0 0 16px;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--c-navy);
+    line-height: 1.3;
+  }
+
+  .pj-desc {
+    margin: 0;
+    font-size: 0.96rem;
+    color: var(--c-navy);
+    line-height: 2.05;
+    max-width: 560px;
+  }
+
+  /* ============================================================
+     Project cards
+  ============================================================ */
+  .pj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+
+  .pj-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  .pj-card--live:hover,
+  .pj-card--live:focus-visible {
+    border-color: rgba(56, 195, 226, 0.7);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .pj-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px 10px;
+    border-bottom: var(--border-dim);
+  }
+
+  .pj-head-slash {
+    flex: 1;
+    min-width: 14px;
+    height: 7px;
+    opacity: 0.35;
+  }
+
+  .pj-status {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .st-live    { color: #10645e; background: rgba(82, 211, 168, 0.16); }
+  .st-coming  { color: #8a5f1d; background: rgba(217, 162, 72, 0.15); }
+  .st-dev     { color: var(--c-blue-deep); background: rgba(43, 124, 217, 0.12); }
+  .st-planned { color: var(--c-muted); background: rgba(84, 113, 138, 0.12); }
+
+  .pj-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 22px 22px;
+    flex: 1;
+  }
+
+  .pj-name {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.06em;
+  }
+
+  .pj-name-en {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.24em;
+    color: var(--c-cyan-text);
+  }
+
+  .pj-desc-text {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--c-ink);
+    line-height: 1.95;
+    flex: 1;
+  }
+
+  .pj-note {
+    margin: 12px 0 0;
+    font-size: 0.78rem;
+    color: #8a5f1d;
+    letter-spacing: 0.04em;
+    border-top: 1px dashed rgba(217, 162, 72, 0.4);
+    padding-top: 10px;
+  }
+
+  .pj-open {
+    margin-top: 14px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--c-blue-deep);
+    letter-spacing: 0.06em;
+  }
+
+  .pj-info {
+    align-items: center;
+  }
+
+  /* ============================================================
+     Responsive
+  ============================================================ */
+  @media (max-width: 600px) {
+    .pj-frame { inset: calc(var(--header-h) + 8px) 8px 8px; }
+    .pj-inner { padding-top: 44px; padding-bottom: 48px; }
+    .pj-grid { grid-template-columns: 1fr; }
+  }
+</style>
