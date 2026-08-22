@@ -52,11 +52,11 @@ export const streamGenres: StreamGenre[] = [
   {
     id: "dev",
     no: "ACT-04",
-    name: "自作ゲーム・自作ツール",
+    name: "自作ツール",
     en: "DEV WORKS",
-    description: "自ら制作したゲームやツールを紹介・配信します。",
+    description: "自ら制作したツールを紹介・配信します。",
     detail:
-      "自作のゲーム・ツールの紹介や、開発の様子をお届けする配信。完成したものは Projects ページで公開します。",
+      "自作ツールの紹介や、開発の様子をお届けする配信。完成したものは Projects ページで公開します。",
   },
   // 「ちょっと役に立つ話」(旧ACT-05) は雑談内で扱うためジャンルからは除外
 ];
