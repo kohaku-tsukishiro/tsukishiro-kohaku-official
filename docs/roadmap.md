@@ -12,9 +12,11 @@
 ## 公開前チェックリスト
 
 - [ ] 素体資料のパスワードを変更（`node website/tools/encrypt-protected.mjs 新パスワード`）
-- [ ] YouTubeチャンネルURLをサイトに設定（現在プレースホルダー）
+- [x] YouTubeチャンネルURLをサイトに設定（2026-08-22 設定済み）
 - [ ] 本番ホスティングへデプロイ（Cloudflare Pages / Netlify 等）
-- [ ] OGP画像（1200×630）の作成
+- [x] OGP画像（1200×630）の作成（2026-08-22 生成済み。再生成は `node website/tools/make-ogp.mjs`）
+- [ ] 本番ドメイン決定後、`website/astro.config.mjs` の `site` を設定（OGP画像の絶対URL化に必須）
+- [ ] （9/5 初配信後）`website/src/data/release.ts` の `OG_IMAGE` を `ogp-debut.png` に差し替えて再デプロイ
 - [ ] けもケットアプリの公開（`apps/kemoket-app` → 配信サブパスへ）＋ Projectsカードを `status: "live"` に変更
 - [ ] （デビュー後）ジャンル別のYouTube再生リストを作成し、`website/src/data/streams.ts` の `playlistUrl` を設定
       （/streams のカードが「準備中」→「公開中」になりリンクが有効化。ナビへの「Streams」追加もこのタイミングで検討）

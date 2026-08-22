@@ -15,3 +15,11 @@ export const TEASER_LABEL = "2026.08.29 SAT 19:50";
 
 export const REVEAL_AT_ISO = "2026-09-05T21:00:00+09:00";
 export const REVEAL_LABEL = "2026.09.05 SAT 21:00";
+
+/**
+ * OGP画像（SNSでURLを共有したときのプレビュー画像）。
+ * クローラーは静的メタタグを読むため日時ゲートでは切り替わらない。
+ * 9/5 初配信後に "/assets/ogp/ogp-debut.png" へ差し替えて再デプロイすること。
+ * 画像の再生成は: node tools/make-ogp.mjs
+ */
+export const OG_IMAGE = "/assets/ogp/ogp-teaser.png";
