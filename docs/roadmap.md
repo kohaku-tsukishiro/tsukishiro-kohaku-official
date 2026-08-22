@@ -11,7 +11,7 @@
 
 ## 公開前チェックリスト
 
-- [ ] 素体資料のパスワードを変更（`node website/tools/encrypt-protected.mjs 新パスワード`）
+- [x] 素体資料のパスワード — 初期パスワードのまま運用と決定（2026-08-22。変更する場合は `node website/tools/encrypt-protected.mjs 新パスワード` → push）
 - [x] YouTubeチャンネルURLをサイトに設定（2026-08-22 設定済み）
 - [x] 本番ホスティングへデプロイ — Cloudflare Pages `tukishiro-kohaku-official` で
       https://tsukishiro-kohaku.com として公開中。GitHub `kohaku-tsukishiro/tsukishiro-kohaku-official`
