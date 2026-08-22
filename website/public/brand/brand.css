@@ -520,6 +520,10 @@
 html:not(.revealed) .when-revealed { display: none !important; }
 html.revealed .when-sealed { display: none !important; }
 
+/* ティザー段階（黒抜きシルエット公開）の前後で切り替え（<html>.teased と併用） */
+html:not(.teased) .when-teased { display: none !important; }
+html.teased .when-preteaser { display: none !important; }
+
 /* スクリーンリーダー専用テキスト */
 .sr-only {
   position: absolute;

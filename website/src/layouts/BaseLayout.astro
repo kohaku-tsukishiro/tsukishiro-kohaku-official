@@ -1,5 +1,5 @@
 ---
-import { REVEAL_AT_ISO } from "../data/release";
+import { REVEAL_AT_ISO, TEASER_AT_ISO } from "../data/release";
 
 interface Props {
   title?: string;
@@ -33,17 +33,21 @@ const isProjects = currentPath === "/projects" || currentPath === "/projects/";
     <link rel="apple-touch-icon" href="/assets/icons/symbol-192.png" />
     <!-- Moonlight White Tiger Project — 共有デザインシステム -->
     <link rel="stylesheet" href="/brand/brand.css" />
-    <!-- 公開日時ゲート: 時刻を過ぎると <html> に .revealed が付く（開いたままでも自動解除） -->
-    <script is:inline data-reveal={REVEAL_AT_ISO}>
+    <!-- 公開日時ゲート（2段階）: 時刻を過ぎると <html> に .teased / .revealed が付く（開いたままでも自動解除） -->
+    <script is:inline data-teaser={TEASER_AT_ISO} data-reveal={REVEAL_AT_ISO}>
       (function () {
-        var t = Date.parse(document.currentScript.dataset.reveal);
-        var forced = new URLSearchParams(location.search).get("preview") === "reveal";
+        var ds = document.currentScript.dataset;
+        var tTeaser = Date.parse(ds.teaser);
+        var tReveal = Date.parse(ds.reveal);
+        var preview = new URLSearchParams(location.search).get("preview");
+        var forceReveal = preview === "reveal";
+        var forceTeaser = forceReveal || preview === "teaser";
         function check() {
-          if (forced || Date.now() >= t) {
-            document.documentElement.classList.add("revealed");
-            return true;
-          }
-          return false;
+          var now = Date.now();
+          var cls = document.documentElement.classList;
+          if (forceTeaser || now >= tTeaser) cls.add("teased");
+          if (forceReveal || now >= tReveal) cls.add("revealed");
+          return cls.contains("teased") && cls.contains("revealed");
         }
         if (!check()) {
           var iv = setInterval(function () {

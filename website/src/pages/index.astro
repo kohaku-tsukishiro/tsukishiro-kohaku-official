@@ -66,10 +66,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <a href="/reference" class="hero-figure" aria-label="立ち絵（着衣・基本色）— 公式設定資料室で見る">
             <span class="hfg-frame" aria-hidden="true"></span>
             <span class="hfg-chip" aria-hidden="true">
-              <span class="hfg-label when-revealed">OFFICIAL VISUAL</span>
-              <span class="hfg-label when-sealed">COMING SOON</span>
-              <span class="hfg-no when-revealed">基本色［青］</span>
-              <span class="hfg-no when-sealed">09.05 SAT 21:00</span>
+              <span class="hfg-label when-teased">OFFICIAL VISUAL</span>
+              <span class="hfg-label when-preteaser">COMING SOON</span>
+              <span class="hfg-no when-teased">基本色［青］</span>
+              <span class="hfg-no when-preteaser">08.29 SAT 19:50</span>
             </span>
             <picture>
               <source
@@ -83,7 +83,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 src="/assets/character/hero-figure-silhouette.png"
                 data-src="/assets/character/hero-figure.png"
                 data-alt="月白コハク 立ち絵（着衣・基本色）"
-                alt="月白コハク シルエット（2026年9月5日 21時公開）"
+                alt="月白コハク シルエット（2026年8月29日 全身公開予定）"
                 width="1100"
                 height="1096"
                 fetchpriority="high"
@@ -338,7 +338,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 </BaseLayout>
 
 <script>
-  // 公開時刻を過ぎたら（<html>.revealed 付与後）Heroのシルエットを本画像へ差し替え
+  // 全身公開時刻（08.29 19:50）を過ぎたら（<html>.teased 付与後）Heroのシルエットを本画像へ差し替え
   const heroSource = document.getElementById("hero-source") as HTMLSourceElement | null;
   const heroImg = document.getElementById("hero-img") as HTMLImageElement | null;
 
@@ -350,11 +350,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
-  if (document.documentElement.classList.contains("revealed")) {
+  if (document.documentElement.classList.contains("teased")) {
     revealHero();
   } else {
     const mo = new MutationObserver(() => {
-      if (document.documentElement.classList.contains("revealed")) {
+      if (document.documentElement.classList.contains("teased")) {
         mo.disconnect();
         revealHero();
       }
@@ -760,7 +760,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     display: block;
   }
 
-  .hero-figure img {
+  .hero-figure picture img {
     width: 100%;
     height: auto;
     display: block;
@@ -772,13 +772,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     transition: transform 0.3s ease;
   }
 
-  .hero-figure:hover img,
-  .hero-figure:focus-visible img {
+  .hero-figure:hover picture img,
+  .hero-figure:focus-visible picture img {
     transform: translateY(-4px);
   }
 
-  /* 公開前: シルエット演出（グローは残して期待感を出す） */
-  :global(html:not(.revealed)) .hero-figure img {
+  /* 全身公開（08.29 19:50）前: シルエット演出（グローは残して期待感を出す） */
+  :global(html:not(.teased)) .hero-figure picture img {
     filter:
       drop-shadow(0 26px 52px rgba(12, 35, 64, 0.45))
       drop-shadow(0 0 40px rgba(255, 255, 255, 0.4));
