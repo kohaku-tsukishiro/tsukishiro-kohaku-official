@@ -3,8 +3,7 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: 本番ドメイン決定後に設定する（OGP画像の絶対URL化に必須）
-  // site: "https://example.com",
+  site: "https://tsukishiro-kohaku.com",
   vite: {
     server: {
       watch: {
