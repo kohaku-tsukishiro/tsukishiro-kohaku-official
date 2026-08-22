@@ -42,7 +42,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <span class="name-chip name-chip--debut">2026.09 DEBUT</span>
           </div>
 
+          {/* キャッチコピーは一旦非表示。再開時に戻す
           <p class="lead">月光をまとう、<br class="sp-only" />近未来の白虎系ケモV。</p>
+          */}
 
           <div class="hero-actions">
             <a href="#" class="btn btn-hero-primary">
@@ -146,7 +148,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
             <div class="profile-side">
               <p class="profile-bio">
-                月光をまとう、近未来の白虎系ケモV。<br />
                 月の力が強くなると、動物（白虎）の姿になることがある。<br />
                 雑談やゲームを中心に、自作ゲーム・ツール制作まで幅広く活動予定。
               </p>
@@ -176,7 +177,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <div class="activity-grid">
 
-          <div class="activity-card reveal hud-sweep">
+          <a href="/streams#talk" class="activity-card reveal hud-sweep">
             <span class="act-no" aria-hidden="true">ACT-01</span>
             <span class="act-chip" aria-hidden="true">
               <svg viewBox="0 0 32 32" fill="none">
@@ -188,9 +189,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </span>
             <p class="act-name">雑談</p>
             <p class="act-desc">日常のことや気になることをのんびり話します。</p>
-          </div>
+            <span class="act-more" aria-hidden="true">配信一覧 →</span>
+          </a>
 
-          <div class="activity-card reveal hud-sweep">
+          <a href="/streams#game" class="activity-card reveal hud-sweep">
             <span class="act-no" aria-hidden="true">ACT-02</span>
             <span class="act-chip" aria-hidden="true">
               <svg viewBox="0 0 32 32" fill="none">
@@ -200,9 +202,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </span>
             <p class="act-name">ゲーム</p>
             <p class="act-desc">様々なジャンルのゲームを中心に配信予定。</p>
-          </div>
+            <span class="act-more" aria-hidden="true">配信一覧 →</span>
+          </a>
 
-          <div class="activity-card reveal hud-sweep">
+          <a href="/streams#music" class="activity-card reveal hud-sweep">
             <span class="act-no" aria-hidden="true">ACT-03</span>
             <span class="act-chip" aria-hidden="true">
               <svg viewBox="0 0 32 32" fill="none">
@@ -212,9 +215,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </span>
             <p class="act-name">歌・企画</p>
             <p class="act-desc">歌配信や視聴者参加型の企画なども予定。</p>
-          </div>
+            <span class="act-more" aria-hidden="true">配信一覧 →</span>
+          </a>
 
-          <div class="activity-card reveal hud-sweep">
+          <a href="/streams#dev" class="activity-card reveal hud-sweep">
             <span class="act-no" aria-hidden="true">ACT-04</span>
             <span class="act-chip" aria-hidden="true">
               <svg viewBox="0 0 32 32" fill="none">
@@ -225,20 +229,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </span>
             <p class="act-name">自作ゲーム・自作ツール</p>
             <p class="act-desc">自ら制作したゲームやツールを紹介・配信します。</p>
-          </div>
-
-          <div class="activity-card reveal hud-sweep">
-            <span class="act-no" aria-hidden="true">ACT-05</span>
-            <span class="act-chip" aria-hidden="true">
-              <svg viewBox="0 0 32 32" fill="none">
-                <circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.8"/>
-                <path d="M16 11 L16 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <circle cx="16" cy="21.5" r="1.4" fill="currentColor"/>
-              </svg>
-            </span>
-            <p class="act-name">ちょっと役に立つ話</p>
-            <p class="act-desc">日々の生活に役立つ小話をお届けします。</p>
-          </div>
+            <span class="act-more" aria-hidden="true">配信一覧 →</span>
+          </a>
 
         </div>
       </div>
@@ -956,6 +948,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .activity-card {
     grid-column: span 2;
     position: relative;
+    display: block;
+    text-decoration: none;
+    color: inherit;
     background: var(--c-panel);
     border: var(--border-frame);
     border-radius: var(--radius-card);
@@ -974,10 +969,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     background: var(--grad-hairline);
   }
 
-  .activity-card:nth-child(4) { grid-column: 2 / 4; }
-  .activity-card:nth-child(5) { grid-column: 4 / 6; }
+  /* 4枚構成: 1段目3枚 + 2段目中央1枚 */
+  .activity-card:nth-child(4) { grid-column: 3 / 5; }
 
-  .activity-card:hover {
+  /* カードは /streams の各ジャンルへのリンク */
+  .activity-card:hover,
+  .activity-card:focus-visible {
     transform: translateY(-5px);
     border-color: rgba(56, 195, 226, 0.65);
     box-shadow: var(--shadow-hover);
@@ -1029,6 +1026,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     font-size: 0.84rem;
     color: var(--c-muted);
     line-height: 1.9;
+  }
+
+  .act-more {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: var(--c-cyan-text);
   }
 
   /* ============================================================
@@ -1307,9 +1313,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     .activity-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-    .activity-card { grid-column: span 1; padding: 22px 14px 20px; }
+    /* 2列 × 2段 */
+    .activity-card { padding: 22px 14px 20px; }
+    .activity-card,
     .activity-card:nth-child(4) { grid-column: span 1; }
-    .activity-card:nth-child(5) { grid-column: 1 / -1; }
 
     .links-layout { grid-template-columns: 1fr; }
     .link-yt { padding: 30px 24px; }

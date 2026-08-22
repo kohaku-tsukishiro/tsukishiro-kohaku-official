@@ -31,3 +31,6 @@ pnpm-debug.log*
 
 # separate git repository (has its own remote: kohaku-tsukishiro/kemoke17)
 apps/kemoket-app/
+
+# wrangler local cache (Cloudflare account info)
+.wrangler/

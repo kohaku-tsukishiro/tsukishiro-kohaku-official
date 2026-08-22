@@ -8,7 +8,8 @@ import {
 import type { Category } from "../data/materials";
 import { REVEAL_LABEL } from "../data/release";
 
-const categories: Category[] = ["character", "brand", "media"];
+// メディアキット（"media"）は準備が整うまで非公開。再開時は配列に戻す
+const categories: Category[] = ["character", "brand"];
 
 /** 公開前のグリッチ文字列を決定的に生成（括弧・空白は残して雰囲気を出す） */
 const GLITCH_GLYPHS = "▓▚█▞◢◤■◆▟▛";

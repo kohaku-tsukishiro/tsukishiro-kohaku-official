@@ -15,6 +15,8 @@
 - [ ] 本番ホスティングへデプロイ（Cloudflare Pages / Netlify 等）
 - [ ] OGP画像（1200×630）の作成
 - [ ] けもケットアプリの公開（`apps/kemoket-app` → 配信サブパスへ）＋ Projectsカードを `status: "live"` に変更
+- [ ] （デビュー後）ジャンル別のYouTube再生リストを作成し、`website/src/data/streams.ts` の `playlistUrl` を設定
+      （/streams のカードが「準備中」→「公開中」になりリンクが有効化。ナビへの「Streams」追加もこのタイミングで検討）
 
 ## プロダクト
 
