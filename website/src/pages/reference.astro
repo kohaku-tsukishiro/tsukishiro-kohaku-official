@@ -6,6 +6,7 @@ import {
   getPreviewableMaterials,
 } from "../data/materials";
 import type { Category } from "../data/materials";
+import { credits } from "../data/credits";
 import { REVEAL_LABEL } from "../data/release";
 
 // メディアキット（"media"）は準備が整うまで非公開。再開時は配列に戻す
@@ -78,6 +79,11 @@ const previewMats = getPreviewableMaterials().map((m) => ({
             </a>
           );
         })}
+        <a role="listitem" class="arc-chip when-teased" href="#credits">
+          <span class="chip-num">03</span>
+          <span class="chip-ja">制作クレジット</span>
+          <span class="chip-count">{credits.length}</span>
+        </a>
       </div>
     </div>
   </div>
@@ -272,6 +278,77 @@ const previewMats = getPreviewableMaterials().map((m) => ({
         );
       })
     }
+
+    <!-- ============================================================
+         制作クレジット — 8/29 19:50（全身公開）と同時に表示
+    ============================================================ -->
+    <section class="section arc-section when-teased" id="credits">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="sec-no">NO.03</span>
+          <div class="sec-titles">
+            <h2 class="sec-ja">制作クレジット</h2>
+            <p class="sec-en">Credits</p>
+          </div>
+          <span class="sec-line" aria-hidden="true"></span>
+        </div>
+        <p class="arc-note reveal">月白コハクのキャラクター制作を担当してくださったお二人です</p>
+
+        <div class="credit-grid">
+          {credits.map((c) => {
+            const inner = (
+              <>
+                <span class="credit-thumb" aria-hidden={c.image ? undefined : "true"}>
+                  {c.image ? (
+                    <img src={c.image} alt="" width="96" height="96" loading="lazy" />
+                  ) : (
+                    <span class="credit-thumb-ph" aria-hidden="true"></span>
+                  )}
+                </span>
+                <span class="credit-info">
+                  <span class="credit-role-en">{c.roleEn}</span>
+                  <span class="credit-role">
+                    {c.role}
+                    <span class="credit-tag">{c.tag}</span>
+                  </span>
+                  <span class="credit-name">{c.name ?? c.tag}</span>
+                  {c.handle && (
+                    <span class="credit-x">
+                      {c.url && /(^https?:\/\/)(x|twitter)\.com\//.test(c.url) ? (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
+                        </svg>
+                      ) : (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                          <polyline points="15 3 21 3 21 9" />
+                          <line x1="10" y1="14" x2="21" y2="3" />
+                        </svg>
+                      )}
+                      {c.handle}
+                    </span>
+                  )}
+                </span>
+                <span class="credit-slash hud-slash" aria-hidden="true"></span>
+              </>
+            );
+            return c.url ? (
+              <a
+                class="credit-card doc-panel hud-corners hud-sweep reveal"
+                href={c.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${c.role}担当 ${c.name ?? c.tag} のXアカウントを開く`}
+              >
+                {inner}
+              </a>
+            ) : (
+              <div class="credit-card doc-panel hud-corners reveal">{inner}</div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
 
     <!-- 注意事項 -->
     <section class="section-compact">
@@ -1239,6 +1316,144 @@ const previewMats = getPreviewableMaterials().map((m) => ({
     font-size: 0.72rem;
     letter-spacing: 0.2em;
     color: var(--c-muted);
+  }
+
+  /* ============================================================
+     制作クレジット
+  ============================================================ */
+  .credit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 780px;
+  }
+
+  .credit-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 22px;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  a.credit-card:hover,
+  a.credit-card:focus-visible {
+    border-color: rgba(56, 195, 226, 0.7);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* サムネ（正方形をHUD風の角丸八角形でマスク） */
+  .credit-thumb {
+    position: relative;
+    width: 84px;
+    height: 84px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(150deg, #10253e 0%, #1a3a5c 100%);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .credit-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* 画像未設定時の三日月プレースホルダ */
+  .credit-thumb-ph {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow:
+      inset -8px -3px 0 rgba(255, 255, 255, 0.75),
+      0 0 16px rgba(127, 231, 242, 0.3);
+    transform: rotate(18deg);
+  }
+
+  .credit-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .credit-role-en {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: var(--c-cyan-text);
+  }
+
+  .credit-role {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--c-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .credit-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--c-blue-deep);
+    border: 1px solid rgba(43, 124, 217, 0.4);
+    border-radius: 999px;
+    padding: 1px 8px;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  .credit-name {
+    font-size: 1.06rem;
+    font-weight: 700;
+    color: var(--c-navy);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .credit-x {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--c-blue-deep);
+  }
+
+  a.credit-card:hover .credit-x,
+  a.credit-card:focus-visible .credit-x {
+    text-decoration: underline;
+  }
+
+  .credit-slash {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 46px;
+    height: 7px;
+    opacity: 0.3;
+  }
+
+  @media (max-width: 600px) {
+    .credit-grid { grid-template-columns: 1fr; }
+    .credit-card { padding: 16px 16px; gap: 14px; }
+    .credit-thumb { width: 68px; height: 68px; }
   }
 
   /* ============================================================
