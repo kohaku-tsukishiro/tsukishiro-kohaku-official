@@ -7,7 +7,7 @@ import {
 } from "../data/materials";
 import type { Category } from "../data/materials";
 import { credits } from "../data/credits";
-import { REVEAL_LABEL } from "../data/release";
+import { REVEAL_LABEL, TEASER_LABEL } from "../data/release";
 
 // メディアキット（"media"）は準備が整うまで非公開。再開時は配列に戻す
 const categories: Category[] = ["character", "brand"];
@@ -79,7 +79,7 @@ const previewMats = getPreviewableMaterials().map((m) => ({
             </a>
           );
         })}
-        <a role="listitem" class="arc-chip when-teased" href="#credits">
+        <a role="listitem" class="arc-chip" href="#credits">
           <span class="chip-num">03</span>
           <span class="chip-ja">制作クレジット</span>
           <span class="chip-count">{credits.length}</span>
@@ -280,9 +280,9 @@ const previewMats = getPreviewableMaterials().map((m) => ({
     }
 
     <!-- ============================================================
-         制作クレジット — 8/29 19:50（全身公開）と同時に表示
+         制作クレジット — 項目は常時表示、中身は 8/29 19:50（全身公開）で解禁
     ============================================================ -->
-    <section class="section arc-section when-teased" id="credits">
+    <section class="section arc-section" id="credits">
       <div class="container">
         <div class="section-header reveal">
           <span class="sec-no">NO.03</span>
@@ -293,8 +293,36 @@ const previewMats = getPreviewableMaterials().map((m) => ({
           <span class="sec-line" aria-hidden="true"></span>
         </div>
         <p class="arc-note reveal">月白コハクのキャラクター制作を担当してくださったお二人です</p>
+        <p class="gate-note when-preteaser">
+          <span class="gate-note-crescent" aria-hidden="true"></span>
+          制作クレジットは <strong>{TEASER_LABEL}</strong> に公開予定です
+        </p>
 
-        <div class="credit-grid">
+        <!-- 公開前: シルエットカード -->
+        <div class="credit-grid when-preteaser" aria-hidden="true">
+          {credits.map((c) => (
+            <div class="credit-card doc-panel hud-corners reveal">
+              <span class="credit-thumb">
+                <span class="credit-thumb-ph"></span>
+              </span>
+              <span class="credit-info">
+                <span class="credit-role-en">{c.roleEn}</span>
+                <span class="credit-role">
+                  {c.role}
+                  <span class="credit-tag">{c.tag}</span>
+                </span>
+                <span class="credit-name">
+                  <span class="glitch-text">{scramble(c.name ?? c.tag)}</span>
+                </span>
+                <span class="credit-x">COMING SOON — {TEASER_LABEL}</span>
+              </span>
+              <span class="credit-slash hud-slash" aria-hidden="true"></span>
+            </div>
+          ))}
+        </div>
+
+        <!-- 公開後: 本カード -->
+        <div class="credit-grid when-teased">
           {credits.map((c) => {
             const inner = (
               <>
