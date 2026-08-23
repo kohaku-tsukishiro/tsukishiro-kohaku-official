@@ -1,8 +1,37 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+// 構造化データ（JSON-LD）: 「月白コハク」の公式ホームページがこのトップページで
+// あることを検索エンジンに伝える（ブランド名検索でトップページを優先させる材料）
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://tsukishiro-kohaku.com/#website",
+      url: "https://tsukishiro-kohaku.com/",
+      name: "月白コハク 公式サイト",
+      alternateName: "Tsukishiro Kohaku Official",
+      inLanguage: "ja",
+    },
+    {
+      "@type": "Person",
+      "@id": "https://tsukishiro-kohaku.com/#person",
+      name: "月白コハク",
+      alternateName: ["つきしろ こはく", "Tsukishiro Kohaku"],
+      url: "https://tsukishiro-kohaku.com/",
+      mainEntityOfPage: "https://tsukishiro-kohaku.com/",
+      sameAs: [
+        "https://x.com/Kohaku_Tsuki905",
+        "https://www.youtube.com/channel/UC4cv0VeSauKyzKbyfzpMs-w",
+      ],
+    },
+  ],
+});
 ---
 
 <BaseLayout>
+  <script type="application/ld+json" is:inline set:html={jsonLd} />
   <main id="main">
 
     <!-- ============================================================
