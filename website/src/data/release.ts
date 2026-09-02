@@ -13,8 +13,8 @@
 export const TEASER_AT_ISO = "2026-08-29T19:50:00+09:00";
 export const TEASER_LABEL = "2026.08.29 SAT 19:50";
 
-export const REVEAL_AT_ISO = "2026-09-05T21:00:00+09:00";
-export const REVEAL_LABEL = "2026.09.05 SAT 21:00";
+export const REVEAL_AT_ISO = "2026-09-05T19:00:00+09:00";
+export const REVEAL_LABEL = "2026.09.05 SAT 19:00";
 
 /**
  * OGP画像（SNSでURLを共有したときのプレビュー画像）。

@@ -35,7 +35,7 @@ npm run build
   どのプロダクトでも「月白コハクのブランド」と分かる統一感を保つ
 - 近未来・高級感・清潔感。派手なネオン／過度なサイバー表現／安っぽいアニメーションは禁止
 - `prefers-reduced-motion`・コントラスト・focus-visible などアクセシビリティを維持
-- 公開スケジュールと解禁ゲート（2026-09-05 21:00）の仕組みは docs/roadmap.md と
+- 公開スケジュールと解禁ゲート（2026-09-05 19:00）の仕組みは docs/roadmap.md と
   `website/src/data/release.ts` を参照。素体資料はパスワード暗号化（website/tools/）
 - git push / commit はユーザーの指示があるときのみ
 

@@ -3,7 +3,7 @@
  *
  * 使い方:  node tools/make-ogp.mjs
  * 出力:    public/assets/ogp/ogp-teaser.png … ロゴ＋黒抜きシルエット（〜9/5）
- *          public/assets/ogp/ogp-debut.png  … ロゴ＋立ち絵本画像（9/5 21:00〜）
+ *          public/assets/ogp/ogp-debut.png  … ロゴ＋立ち絵本画像（9/5 19:00〜）
  *
  * 切り替えは src/data/release.ts の OG_IMAGE を差し替えて再デプロイ
  * （OGPはクローラーが静的メタタグを読むため、サイト内の日時ゲートでは切替不可）。
@@ -134,7 +134,7 @@ async function build({ figure, chipText, out }) {
 await mkdir(outDir, { recursive: true });
 await build({
   figure: "character/hero-figure-silhouette.png",
-  chipText: "2026.09.05 SAT 21:00 DEBUT",
+  chipText: "2026.09.05 SAT 19:00 DEBUT",
   out: "ogp-teaser.png",
 });
 await build({
