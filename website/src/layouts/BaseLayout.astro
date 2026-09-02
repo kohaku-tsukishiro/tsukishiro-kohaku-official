@@ -1,19 +1,23 @@
 ---
 import { REVEAL_AT_ISO, TEASER_AT_ISO, OG_IMAGE } from "../data/release";
+import { SHOW_PROJECTS_NAV } from "../data/projects";
 
 interface Props {
   title?: string;
   description?: string;
+  /** ページ個別のOGP画像（/public 配下のパス）。未指定ならサイト共通画像 */
+  ogImage?: string;
 }
 
 const {
   title = "月白コハク 公式サイト | Tsukishiro Kohaku Official",
   description =
     "月白コハク（つきしろ こはく）の公式ブランドサイト。2026年9月デビュー予定。",
+  ogImage = OG_IMAGE,
 } = Astro.props;
 
 // OGPは絶対URLが必要。astro.config.mjs の site 設定後に自動で絶対URLになる
-const ogImageUrl = Astro.site ? new URL(OG_IMAGE, Astro.site).href : OG_IMAGE;
+const ogImageUrl = Astro.site ? new URL(ogImage, Astro.site).href : ogImage;
 // 正規URL（検索エンジンに「このページの正式なURL」を伝える）
 const canonicalUrl = Astro.site
   ? new URL(Astro.url.pathname, Astro.site).href
@@ -22,7 +26,8 @@ const canonicalUrl = Astro.site
 const currentPath = Astro.url.pathname;
 const isReference = currentPath === "/reference" || currentPath === "/reference/";
 const isGuideline = currentPath === "/guideline" || currentPath === "/guideline/";
-const isProjects = currentPath === "/projects" || currentPath === "/projects/";
+// /projects 配下（詳細ページ）でもナビをアクティブにする
+const isProjects = currentPath === "/projects" || currentPath.startsWith("/projects/");
 ---
 
 <html lang="ja">
@@ -99,12 +104,14 @@ const isProjects = currentPath === "/projects" || currentPath === "/projects/";
                 class:list={[{ "nav-active": isReference }]}
               >資料室</a>
             </li>
-            <li>
-              <a
-                href="/projects"
-                class:list={[{ "nav-active": isProjects }]}
-              >Projects</a>
-            </li>
+            {SHOW_PROJECTS_NAV && (
+              <li>
+                <a
+                  href="/projects"
+                  class:list={[{ "nav-active": isProjects }]}
+                >Projects</a>
+              </li>
+            )}
             <li>
               <a
                 href="/guideline"

@@ -1,0 +1,652 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  publishedProjects,
+  projectPhaseMeta,
+  type Project,
+} from "../../data/projects";
+
+/**
+ * Project 詳細ページ — /projects/[slug]
+ *
+ * getStaticPaths が返すのは status: "published" のものだけなので、
+ * draft の詳細URLはビルドされず（= 404 になり）内容が外部に出ることはない。
+ * 各セクションはデータが存在するときだけ描画する。
+ */
+export function getStaticPaths() {
+  return publishedProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project: p } = Astro.props;
+const st = p.phase ? projectPhaseMeta[p.phase] : null;
+
+const pageTitle = p.seo?.title ?? `${p.title} | Projects | 月白コハク 公式サイト`;
+const pageDescription = p.seo?.description ?? p.shortDescription;
+const ogImage = p.seo?.ogImage ?? p.heroImage?.src ?? p.thumbnail?.src;
+
+/** 表示するセクション（データがあるものだけ。番号は表示順に自動採番） */
+const sections = [
+  { id: "overview", ja: "概要", en: "Overview", show: !!p.description?.length },
+  { id: "features", ja: "主な機能", en: "Features", show: !!p.features?.length },
+  { id: "screenshots", ja: "スクリーンショット", en: "Screenshots", show: !!p.screenshots?.length },
+  { id: "usage", ja: "使い方", en: "How to use", show: !!p.usage?.length },
+  { id: "platforms", ja: "対応環境", en: "Platforms", show: !!p.platforms?.length },
+  { id: "notes", ja: "注意事項", en: "Notes", show: !!p.notes?.length },
+  { id: "links", ja: "リンク", en: "Links", show: !!(p.appUrl || p.repositoryUrl || p.links?.length) },
+  { id: "updates", ja: "更新情報", en: "Updates", show: !!p.updates?.length },
+  { id: "credits", ja: "制作", en: "Credits", show: !!p.credits?.length },
+].filter((s) => s.show);
+
+const secNo = (id: string) =>
+  `NO.${String(sections.findIndex((s) => s.id === id) + 1).padStart(2, "0")}`;
+const has = (id: string) => sections.some((s) => s.id === id);
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} ogImage={ogImage}>
+  <!-- Banner（Projects 一覧と共通のトーン） -->
+  <div class="pd-banner">
+    <div class="pd-bg circuit-white" aria-hidden="true"></div>
+    <div class="pd-frame" aria-hidden="true">
+      <span class="pdf-corner-cut"></span>
+      <span class="pdf-slash hud-slash hud-slash--white"></span>
+      <span class="pdf-chevrons hud-chevrons"><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    <div class="container pd-inner">
+      <nav aria-label="パンくず" class="pd-breadcrumb">
+        <a href="/">TOP</a>
+        <span aria-hidden="true">／</span>
+        <a href="/projects">Projects</a>
+        <span aria-hidden="true">／</span>
+        <span aria-current="page">{p.title}</span>
+      </nav>
+
+      <div class="pd-meta">
+        <span class="mwt-chip">{p.no}</span>
+        {st && <span class={`pd-status ${st.cls}`}>{st.label}</span>}
+      </div>
+      <p class="pd-en">{p.en}</p>
+      <h1 class="pd-title">{p.title}</h1>
+      <p class="pd-desc">{p.tagline ?? p.shortDescription}</p>
+      {(p.publishedAt || p.updatedAt) && (
+        <p class="pd-dates">
+          {p.publishedAt && <span>RELEASED {p.publishedAt}</span>}
+          {p.updatedAt && <span>UPDATED {p.updatedAt}</span>}
+        </p>
+      )}
+    </div>
+  </div>
+
+  <main id="main">
+    {p.heroImage && (
+      <div class="container">
+        <figure class="pd-hero doc-panel hud-corners reveal">
+          <img
+            src={p.heroImage.src}
+            alt={p.heroImage.alt}
+            width="1280"
+            height="720"
+          />
+        </figure>
+      </div>
+    )}
+
+    {sections.length > 0 ? (
+      <div class="container pd-sections">
+        {has("overview") && (
+          <section class="pd-section" aria-labelledby="sec-overview">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("overview")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-overview">概要</h2>
+                <p class="sec-en">Overview</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <div class="pd-prose reveal">
+              {p.description!.map((para) => <p>{para}</p>)}
+            </div>
+          </section>
+        )}
+
+        {has("features") && (
+          <section class="pd-section" aria-labelledby="sec-features">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("features")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-features">主な機能</h2>
+                <p class="sec-en">Features</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <ul class="pd-features reveal">
+              {p.features!.map((f) => (
+                <li class="doc-panel">
+                  <span class="mwt-crescent" aria-hidden="true"></span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {has("screenshots") && (
+          <section class="pd-section" aria-labelledby="sec-screenshots">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("screenshots")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-screenshots">スクリーンショット</h2>
+                <p class="sec-en">Screenshots</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <div class="pd-shots reveal">
+              {p.screenshots!.map((s) => (
+                <figure class="pd-shot doc-panel">
+                  <img src={s.src} alt={s.alt} width="800" height="500" loading="lazy" />
+                  {s.caption && <figcaption>{s.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {has("usage") && (
+          <section class="pd-section" aria-labelledby="sec-usage">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("usage")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-usage">使い方</h2>
+                <p class="sec-en">How to use</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <ol class="pd-steps doc-panel reveal">
+              {p.usage!.map((step, i) => (
+                <li>
+                  <span class="pd-step-no" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {has("platforms") && (
+          <section class="pd-section" aria-labelledby="sec-platforms">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("platforms")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-platforms">対応環境</h2>
+                <p class="sec-en">Platforms</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <ul class="pd-platforms reveal">
+              {p.platforms!.map((pl) => (
+                <li class="mwt-badge mwt-badge--blue">{pl}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {has("notes") && (
+          <section class="pd-section" aria-labelledby="sec-notes">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("notes")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-notes">注意事項</h2>
+                <p class="sec-en">Notes</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <ul class="pd-notes reveal">
+              {p.notes!.map((n) => <li class="mwt-note">{n}</li>)}
+            </ul>
+          </section>
+        )}
+
+        {has("links") && (
+          <section class="pd-section" aria-labelledby="sec-links">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("links")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-links">リンク</h2>
+                <p class="sec-en">Links</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <div class="pd-links reveal">
+              {p.appUrl && (
+                <a class="mwt-btn mwt-btn--primary" href={p.appUrl}>アプリを開く →</a>
+              )}
+              {p.repositoryUrl && (
+                <a class="mwt-btn mwt-btn--secondary" href={p.repositoryUrl}>ソースコード</a>
+              )}
+              {p.links?.map((l) => (
+                <a class="mwt-btn mwt-btn--secondary" href={l.url}>{l.label}</a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {has("updates") && (
+          <section class="pd-section" aria-labelledby="sec-updates">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("updates")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-updates">更新情報</h2>
+                <p class="sec-en">Updates</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <dl class="pd-updates doc-panel reveal">
+              {p.updates!.map((u) => (
+                <div class="pd-update">
+                  <dt>{u.date}</dt>
+                  <dd>{u.text}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+
+        {has("credits") && (
+          <section class="pd-section" aria-labelledby="sec-credits">
+            <div class="section-header reveal">
+              <span class="sec-no">{secNo("credits")}</span>
+              <div class="sec-titles">
+                <h2 class="sec-ja" id="sec-credits">制作</h2>
+                <p class="sec-en">Credits</p>
+              </div>
+              <span class="sec-line" aria-hidden="true"></span>
+            </div>
+            <dl class="pd-credits doc-panel reveal">
+              {p.credits!.map((c) => (
+                <div class="pd-credit">
+                  <dt>{c.role}</dt>
+                  <dd>{c.name}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+      </div>
+    ) : (
+      <div class="container pd-sections">
+        <div class="mwt-info pd-info reveal">
+          <span class="mwt-crescent" aria-hidden="true"></span>
+          <span>詳しい情報は準備中です。最新情報は配信・Xでお知らせします。</span>
+        </div>
+      </div>
+    )}
+
+    <div class="container pd-back">
+      <a class="mwt-btn mwt-btn--navy" href="/projects">← Projects 一覧へ</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  /* ============================================================
+     Banner（Projects 一覧と共通のトーン）
+  ============================================================ */
+  .pd-banner {
+    position: relative;
+    padding-top: var(--header-h);
+    background: var(--grad-brand);
+    overflow: hidden;
+  }
+
+  .pd-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  .pd-frame {
+    position: absolute;
+    inset: calc(var(--header-h) + 14px) 18px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+
+  .pdf-corner-cut {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.9);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    border-top-left-radius: 8px;
+  }
+
+  .pdf-slash {
+    position: absolute;
+    top: 12px;
+    right: 7%;
+    width: min(280px, 32%);
+  }
+
+  .pdf-chevrons {
+    position: absolute;
+    left: 24px;
+    bottom: 14px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .pd-inner {
+    position: relative;
+    z-index: 1;
+    padding-top: 58px;
+    padding-bottom: 62px;
+  }
+
+  .pd-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 34px;
+  }
+
+  .pd-breadcrumb a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 1px;
+    transition: border-color 0.18s;
+  }
+
+  .pd-breadcrumb a:hover,
+  .pd-breadcrumb a:focus-visible {
+    border-bottom-color: #fff;
+  }
+
+  .pd-breadcrumb [aria-current] {
+    overflow-wrap: anywhere;
+  }
+
+  .pd-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .pd-status {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .st-live    { color: #10645e; }
+  .st-coming  { color: #8a5f1d; }
+  .st-dev     { color: var(--c-blue-deep); }
+  .st-planned { color: var(--c-muted); }
+
+  .pd-en {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.34em;
+    color: #fff;
+    text-shadow: 0 1px 10px rgba(12, 35, 64, 0.3);
+  }
+
+  .pd-title {
+    margin: 0 0 16px;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--c-navy);
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .pd-desc {
+    margin: 0;
+    font-size: 0.96rem;
+    color: var(--c-navy);
+    line-height: 2.05;
+    max-width: 560px;
+  }
+
+  .pd-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 18px 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  /* ============================================================
+     Hero image
+  ============================================================ */
+  .pd-hero {
+    margin: -28px 0 0;
+    padding: 0;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+  }
+
+  .pd-hero img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ============================================================
+     Sections
+  ============================================================ */
+  .pd-sections {
+    padding-top: 64px;
+  }
+
+  .pd-section {
+    margin-bottom: 72px;
+  }
+
+  .pd-prose {
+    max-width: 760px;
+  }
+
+  .pd-prose p {
+    margin: 0 0 1.2em;
+    font-size: 0.96rem;
+    line-height: 2.05;
+    color: var(--c-ink);
+  }
+
+  .pd-prose p:last-child { margin-bottom: 0; }
+
+  .pd-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .pd-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--c-ink);
+  }
+
+  .pd-features .mwt-crescent {
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .pd-shots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .pd-shot {
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .pd-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: var(--border-dim);
+  }
+
+  .pd-shot figcaption {
+    padding: 10px 16px 12px;
+    font-size: 0.8rem;
+    color: var(--c-muted);
+    line-height: 1.7;
+  }
+
+  .pd-steps {
+    list-style: none;
+    margin: 0;
+    padding: 8px 24px;
+    max-width: 760px;
+  }
+
+  .pd-steps li {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: var(--c-ink);
+    border-bottom: var(--border-dim);
+  }
+
+  .pd-steps li:last-child { border-bottom: none; }
+
+  .pd-step-no {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--c-cyan-text);
+    padding-top: 6px;
+  }
+
+  .pd-platforms {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pd-notes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 760px;
+  }
+
+  .pd-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .pd-updates,
+  .pd-credits {
+    margin: 0;
+    padding: 8px 24px;
+    max-width: 760px;
+  }
+
+  .pd-update,
+  .pd-credit {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 6px 20px;
+    padding: 12px 0;
+    border-bottom: var(--border-dim);
+  }
+
+  .pd-update:last-child,
+  .pd-credit:last-child { border-bottom: none; }
+
+  .pd-update dt,
+  .pd-credit dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--c-cyan-text);
+    padding-top: 5px;
+  }
+
+  .pd-update dd,
+  .pd-credit dd {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--c-ink);
+  }
+
+  .pd-info {
+    align-items: center;
+    margin-bottom: 48px;
+  }
+
+  .pd-back {
+    padding-bottom: 24px;
+  }
+
+  /* ============================================================
+     Responsive
+  ============================================================ */
+  @media (max-width: 600px) {
+    .pd-frame { inset: calc(var(--header-h) + 8px) 8px 8px; }
+    .pd-inner { padding-top: 44px; padding-bottom: 48px; }
+    .pd-hero { margin-top: -20px; }
+    .pd-sections { padding-top: 48px; }
+    .pd-section { margin-bottom: 56px; }
+    .pd-features,
+    .pd-shots { grid-template-columns: 1fr; }
+    .pd-steps,
+    .pd-updates,
+    .pd-credits { padding: 4px 18px; }
+    .pd-update,
+    .pd-credit { grid-template-columns: 1fr; gap: 2px; }
+    .pd-links .mwt-btn { width: 100%; }
+  }
+</style>

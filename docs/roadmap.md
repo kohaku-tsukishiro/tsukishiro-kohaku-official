@@ -19,7 +19,8 @@
 - [x] OGP画像（1200×630）の作成（2026-08-22 生成済み。再生成は `node website/tools/make-ogp.mjs`）
 - [x] `website/astro.config.mjs` の `site` を設定（https://tsukishiro-kohaku.com）
 - [ ] （9/5 初配信後）`website/src/data/release.ts` の `OG_IMAGE` を `ogp-debut.png` に差し替えて再デプロイ
-- [ ] けもケットアプリの公開（`apps/kemoket-app` → 配信サブパスへ）＋ Projectsカードを `status: "live"` に変更
+- [ ] けもケットアプリの公開（`apps/kemoket-app` → 配信サブパスへ）＋ `website/src/data/projects.ts` の
+      `kemoket-support` を `status: "published"` に変更（appUrl・紹介文・画像も設定）
 - [ ] （デビュー後）ジャンル別のYouTube再生リストを作成し、`website/src/data/streams.ts` の `playlistUrl` を設定
       （/streams のカードが「準備中」→「公開中」になりリンクが有効化。ナビへの「Streams」追加もこのタイミングで検討）
 

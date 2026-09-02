@@ -1,57 +1,16 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  publishedProjects,
+  projectPhaseMeta,
+  projectUrl,
+} from "../data/projects";
 
 /**
  * Moonlight White Tiger Project — プロダクト一覧
- * 公開準備が整ったら url を設定し status を "live" に変更する。
+ * データは src/data/projects.ts で管理。status が "published" のものだけ表示する。
  */
-type ProjectStatus = "live" | "coming" | "dev" | "planned";
-
-interface Project {
-  no: string;
-  name: string;
-  en: string;
-  description: string;
-  status: ProjectStatus;
-  /** 公開済みの場合のみ設定 */
-  url?: string;
-  note?: string;
-}
-
-const projects: Project[] = [
-  {
-    no: "PRJ-01",
-    name: "けもケット 購入サポート",
-    en: "KEMOKET SUPPORT APP",
-    description:
-      "けもケット参加サークルの購入サポートWebアプリ。チェックリストで当日の買い回りをスマートに。",
-    // 紹介配信（2026.09.07-08予定）後に status を "live" へ変更するとリンクが有効になる
-    status: "coming",
-    url: "https://kohaku-tsukishiro.github.io/kemoke17/",
-    note: "2026.09 公開予定 — デビュー後の配信で紹介します",
-  },
-  {
-    no: "PRJ-02",
-    name: "RecallOS",
-    en: "RECALLOS",
-    description: "開発中のプロジェクト。詳細は続報をお待ちください。",
-    status: "dev",
-  },
-  {
-    no: "PRJ-03",
-    name: "配信用ツール",
-    en: "STREAMING TOOLS",
-    description: "配信をもっと楽しくする自作ツール群。順次公開予定。",
-    status: "planned",
-  },
-];
-
-const statusMeta: Record<ProjectStatus, { label: string; cls: string }> = {
-  live:    { label: "公開中",     cls: "st-live" },
-  coming:  { label: "COMING SOON", cls: "st-coming" },
-  dev:     { label: "開発中",     cls: "st-dev" },
-  planned: { label: "構想中",     cls: "st-planned" },
-};
+const projects = publishedProjects;
 ---
 
 <BaseLayout
@@ -86,32 +45,48 @@ const statusMeta: Record<ProjectStatus, { label: string; cls: string }> = {
   <main id="main">
     <section class="section pj-section">
       <div class="container">
-        <div class="pj-grid">
-          {projects.map((p) => {
-            const st = statusMeta[p.status];
-            const isLive = p.status === "live" && p.url;
-            const Tag = isLive ? "a" : "div";
-            return (
-              <Tag
-                class={`pj-card doc-panel reveal ${isLive ? "pj-card--live hud-sweep" : ""}`}
-                href={isLive ? p.url : undefined}
-              >
-                <div class="pj-head">
-                  <span class="mwt-tag">{p.no}</span>
-                  <span class="pj-head-slash hud-slash" aria-hidden="true"></span>
-                  <span class={`pj-status ${st.cls}`}>{st.label}</span>
-                </div>
-                <div class="pj-body">
-                  <p class="pj-name">{p.name}</p>
-                  <p class="pj-name-en">{p.en}</p>
-                  <p class="pj-desc-text">{p.description}</p>
-                  {p.note && <p class="pj-note">{p.note}</p>}
-                  {isLive && <span class="pj-open">アプリを開く →</span>}
-                </div>
-              </Tag>
-            );
-          })}
-        </div>
+        {projects.length > 0 ? (
+          <div class="pj-grid">
+            {projects.map((p) => {
+              const st = p.phase ? projectPhaseMeta[p.phase] : null;
+              return (
+                <a class="pj-card doc-panel hud-sweep reveal" href={projectUrl(p)}>
+                  <div class="pj-head">
+                    <span class="mwt-tag">{p.no}</span>
+                    <span class="pj-head-slash hud-slash" aria-hidden="true"></span>
+                    {st && <span class={`pj-status ${st.cls}`}>{st.label}</span>}
+                  </div>
+                  <div class="pj-thumb">
+                    {p.thumbnail ? (
+                      <img
+                        src={p.thumbnail.src}
+                        alt={p.thumbnail.alt}
+                        width="640"
+                        height="400"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="pj-thumb-empty" aria-hidden="true">
+                        <span class="circuit-white"></span>
+                        <span class="mwt-crescent"></span>
+                      </span>
+                    )}
+                  </div>
+                  <div class="pj-body">
+                    <p class="pj-name">{p.title}</p>
+                    <p class="pj-name-en">{p.en}</p>
+                    <p class="pj-desc-text">{p.shortDescription}</p>
+                    <span class="pj-open">詳しく見る →</span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        ) : (
+          <p class="pj-empty doc-panel reveal">
+            公開中のプロジェクトはまだありません。
+          </p>
+        )}
 
         <div class="mwt-info pj-info reveal">
           <span class="mwt-crescent" aria-hidden="true"></span>
@@ -250,8 +225,8 @@ const statusMeta: Record<ProjectStatus, { label: string; cls: string }> = {
     transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   }
 
-  .pj-card--live:hover,
-  .pj-card--live:focus-visible {
+  .pj-card:hover,
+  .pj-card:focus-visible {
     border-color: rgba(56, 195, 226, 0.7);
     transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
@@ -286,6 +261,50 @@ const statusMeta: Record<ProjectStatus, { label: string; cls: string }> = {
   .st-dev     { color: var(--c-blue-deep); background: rgba(43, 124, 217, 0.12); }
   .st-planned { color: var(--c-muted); background: rgba(84, 113, 138, 0.12); }
 
+  /* サムネイル（16:10）。未設定時はブランドグラデ＋三日月のプレースホルダ */
+  .pj-thumb {
+    aspect-ratio: 16 / 10;
+    background: var(--grad-frame);
+    border-bottom: var(--border-dim);
+    overflow: hidden;
+  }
+
+  .pj-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pj-thumb-empty {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pj-thumb-empty .circuit-white {
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+  }
+
+  .pj-thumb-empty .mwt-crescent {
+    width: 34px;
+    height: 34px;
+    opacity: 0.9;
+  }
+
+  .pj-empty {
+    margin: 0 0 36px;
+    padding: 28px 24px;
+    text-align: center;
+    font-size: 0.92rem;
+    color: var(--c-muted);
+  }
+
   .pj-body {
     display: flex;
     flex-direction: column;
@@ -316,15 +335,6 @@ const statusMeta: Record<ProjectStatus, { label: string; cls: string }> = {
     color: var(--c-ink);
     line-height: 1.95;
     flex: 1;
-  }
-
-  .pj-note {
-    margin: 12px 0 0;
-    font-size: 0.78rem;
-    color: #8a5f1d;
-    letter-spacing: 0.04em;
-    border-top: 1px dashed rgba(217, 162, 72, 0.4);
-    padding-top: 10px;
   }
 
   .pj-open {
