@@ -1,11 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { streamGenres } from "../data/streams";
+import { streamGenres, archivesOf } from "../data/streams";
 
 /**
  * 配信 — ジャンル別アーカイブページ
- * トップの活動カードのリンク先。デビュー後、ジャンルごとの
- * YouTube 再生リストができたら data/streams.ts の playlistUrl を設定する。
+ * トップの活動カードのリンク先。配信が終わったら data/streams.ts の
+ * streamArchives に追加し、再生リストができたら playlistUrl を設定する。
  */
 
 /** ジャンルアイコン（トップの活動カードと共通のモチーフ） */
@@ -56,7 +56,7 @@ const icons: Record<string, string> = {
       <h1 class="sg-title">配信</h1>
       <p class="sg-desc">
         ジャンルごとの配信アーカイブをまとめるページです。<br />
-        デビュー後、再生リストを順次追加していきます。
+        配信後にアーカイブを順次追加していきます。
       </p>
     </div>
   </div>
@@ -66,7 +66,8 @@ const icons: Record<string, string> = {
       <div class="container">
         <div class="sg-grid">
           {streamGenres.map((g) => {
-            const isLive = Boolean(g.playlistUrl);
+            const archives = archivesOf(g.id);
+            const isLive = Boolean(g.playlistUrl) || archives.length > 0;
             return (
               <article id={g.id} class="sg-card doc-panel reveal">
                 <div class="sg-head">
@@ -82,13 +83,32 @@ const icons: Record<string, string> = {
                     <p class="sg-name">{g.name}</p>
                     <p class="sg-name-en">{g.en}</p>
                     <p class="sg-detail">{g.detail}</p>
-                    {isLive ? (
-                      <a class="sg-open" href={g.playlistUrl}>
-                        再生リストを見る →
+                    {archives.length > 0 && (
+                      <ul class="sg-archives">
+                        {archives.map((a) => (
+                          <li>
+                            <a
+                              class="sg-archive"
+                              href={a.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <time class="sg-archive-date">{a.date}</time>
+                              <span class="sg-archive-title">{a.title}</span>
+                              <span class="sg-archive-ext" aria-hidden="true">↗</span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {g.playlistUrl && (
+                      <a class="sg-open" href={g.playlistUrl} target="_blank" rel="noopener noreferrer">
+                        再生リストを見る ↗
                       </a>
-                    ) : (
+                    )}
+                    {!isLive && (
                       <p class="sg-note">
-                        アーカイブはデビュー後に追加予定です。
+                        アーカイブは配信後に追加予定です。
                       </p>
                     )}
                   </div>
@@ -101,7 +121,7 @@ const icons: Record<string, string> = {
         <div class="mwt-info sg-info reveal">
           <span class="mwt-crescent" aria-hidden="true"></span>
           <span>
-            2026.09.05 のデビュー後、配信アーカイブ・再生リストをここに追加していきます。
+            配信アーカイブは配信後に順次ここへ追加していきます。
             最新情報は配信・Xでお知らせします。
           </span>
         </div>
@@ -325,6 +345,47 @@ const icons: Record<string, string> = {
     letter-spacing: 0.04em;
     border-top: 1px dashed rgba(217, 162, 72, 0.4);
     padding-top: 10px;
+  }
+
+  .sg-archives {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    border-top: 1px solid rgba(20, 40, 80, 0.12);
+  }
+
+  .sg-archive {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(20, 40, 80, 0.12);
+    color: var(--c-ink);
+    text-decoration: none;
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+
+  .sg-archive:hover .sg-archive-title,
+  .sg-archive:focus-visible .sg-archive-title {
+    text-decoration: underline;
+  }
+
+  .sg-archive-date {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: var(--c-muted);
+  }
+
+  .sg-archive-title {
+    font-weight: 600;
+  }
+
+  .sg-archive-ext {
+    font-size: 0.8rem;
+    color: var(--c-blue-deep);
   }
 
   .sg-open {

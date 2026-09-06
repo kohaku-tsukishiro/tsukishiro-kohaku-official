@@ -18,18 +18,19 @@
       の main へ push すると自動デプロイされる
 - [x] OGP画像（1200×630）の作成（2026-08-22 生成済み。再生成は `node website/tools/make-ogp.mjs`）
 - [x] `website/astro.config.mjs` の `site` を設定（https://tsukishiro-kohaku.com）
-- [ ] （9/5 初配信後）`website/src/data/release.ts` の `OG_IMAGE` を `ogp-debut.png` に差し替えて再デプロイ
-- [ ] けもケットアプリの公開（`apps/kemoket-app` → 配信サブパスへ）＋ `website/src/data/projects.ts` の
-      `kemoket-support` を `status: "published"` に変更（appUrl・紹介文・画像も設定）
-- [ ] （デビュー後）ジャンル別のYouTube再生リストを作成し、`website/src/data/streams.ts` の `playlistUrl` を設定
+- [x] （9/5 初配信後）`website/src/data/release.ts` の `OG_IMAGE` を `ogp-debut.png` に差し替えて再デプロイ（2026-09-07 切替）
+- [x] けもケットアプリの公開（GitHub Pages https://kohaku-tsukishiro.github.io/kemoke17/ ）＋ `website/src/data/projects.ts` の
+      `kemoket-support` を `status: "published"` に変更（2026-09-07。RecallOS・配信用ツールは内容が揃うまで draft で非表示）
+- [x] 配信アーカイブを /streams に掲載する仕組み（`website/src/data/streams.ts` の `streamArchives`）。2026-09-07 に初配信・振り返り配信の2本を掲載
+- [ ] （任意）ジャンル別のYouTube再生リストを作成し、`website/src/data/streams.ts` の `playlistUrl` を設定
       （/streams のカードが「準備中」→「公開中」になりリンクが有効化。ナビへの「Streams」追加もこのタイミングで検討）
 
 ## プロダクト
 
 | プロダクト | 状態 | 場所 |
 |---|---|---|
-| 公式サイト | 制作中（デビュー待ち） | `website/` |
-| けもケット購入サポート | 完成・公開待ち | `apps/kemoket-app/` |
+| 公式サイト | 公開中（2026-09-05 デビュー） | `website/` |
+| けもケット購入サポート | 公開中（2026-09-07 Projects掲載） | `apps/kemoket-app/` |
 | RecallOS | 開発中 | （未統合） |
 | 配信用ツール | 構想中 | — |
 

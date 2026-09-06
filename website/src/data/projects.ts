@@ -82,6 +82,8 @@ export interface Project {
 
   /** アプリ本体のURL。設定すると「アプリを開く」ボタンが出る */
   appUrl?: string;
+  /** 紹介・使い方ページを持つか。URLはプロジェクトslugから生成する */
+  hasHowTo?: boolean;
   /** ソースコードのURL */
   repositoryUrl?: string;
   /** その他の外部リンク */
@@ -107,18 +109,59 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    // 第1号プロジェクト。初配信後の紹介配信までは draft のまま維持すること。
-    // 公開時: status を "published" にし、正式な文章・画像・appUrl を設定してからデプロイする。
-    // （旧 Projects ページに候補として記載されていたURL: https://kohaku-tsukishiro.github.io/kemoke17/
-    //   正式な公開URLが確定してから appUrl に設定する）
+    // 2026-09-07 公開。
     slug: "kemoket-support",
     no: "PRJ-01",
-    title: "けもケ お買い物支援アプリ",
-    en: "KEMOKET SUPPORT APP",
+    title: "けもケット17 購入サポートアプリ",
+    en: "KEMOKET 17 PURCHASE SUPPORT APP",
     shortDescription:
-      "けもケットでのサークル巡回や買い物をサポートするために制作したWebアプリ。",
-    status: "draft",
-    phase: "coming",
+      "けもケット17当日のサークル巡回・購入を支援する、非公式ファンメイドWebアプリ。",
+    status: "published",
+    phase: "live",
+    thumbnail: {
+      src: "/assets/projects/kemoket-support/og.png",
+      alt: "けもケット17 購入サポートアプリの紹介画像",
+    },
+    heroImage: {
+      src: "/assets/projects/kemoket-support/og.png",
+      alt: "アプリアイコンと実際の配置図画面を掲載した、けもケット17 購入サポートアプリの紹介画像",
+    },
+    tagline: "当日の『次はどこ？』を、スマートフォンひとつで分かりやすく。",
+    description: [
+      "けもケット17の会場で、行きたいサークル探しから巡回順、購入チェックまでをまとめて支援するWebアプリです。",
+      "広い会場で次に向かう場所をすぐ確認でき、買い忘れや巡回中の迷いを減らしたいという思いから制作しました。アカウント登録なしで、当日持っていくスマートフォンから利用できます。",
+    ],
+    features: [
+      "会場配置図に予定と巡回順を重ね、次に行くサークルをすぐ確認",
+      "サークル名・代表者名・配置番号から検索し、行く予定や『あとで』へ登録",
+      "欲しいもの・価格・個数・メモをまとめられる購入リスト",
+      "行く順番の並べ替えと、購入後の『済み』チェック",
+      "依頼内容を共有リンクやQRコードで渡せるお使い依頼",
+      "ホーム画面への追加と、オンライン中の事前起動による利用支援",
+    ],
+    screenshots: [
+      {
+        src: "/assets/projects/kemoket-support/og.png",
+        alt: "現在版のけもケット17 購入サポートアプリ配置図画面を掲載した紹介画像",
+        caption: "現在版の配置図画面。予定と巡回順を重ねて、当日の移動を確認できます。",
+      },
+    ],
+    platforms: ["iPhone / Safari", "Android / Chrome", "PWA対応"],
+    notes: [
+      "入力内容は使用中の端末・ブラウザ内に保存され、別端末へ自動同期されません。",
+      "当日ホーム画面から使う場合は、先にホーム画面へ追加し、そのアイコンから起動した状態で準備してください。",
+      "本ツールは月白コハク制作の非公式ファンメイドツールです。けもケット主催・運営とは関係ありません。",
+    ],
+    appUrl: "https://kohaku-tsukishiro.github.io/kemoke17/",
+    hasHowTo: true,
+    credits: [{ role: "制作", name: "月白コハク" }],
+    publishedAt: "2026.09.05",
+    seo: {
+      title: "けもケット17 購入サポートアプリ | 月白コハク",
+      description:
+        "けもケット17当日のサークル巡回、行く順番、購入リスト、お使い依頼を支援する月白コハク制作の非公式Webアプリ。",
+      ogImage: "/assets/projects/kemoket-support/og.png",
+    },
   },
   {
     slug: "recallos",
@@ -126,7 +169,8 @@ export const projects: Project[] = [
     title: "RecallOS",
     en: "RECALLOS",
     shortDescription: "開発中のプロジェクト。詳細は続報をお待ちください。",
-    status: "published",
+    // 公開できる内容が揃うまで非表示（2026-09-07）
+    status: "draft",
     phase: "dev",
   },
   {
@@ -135,7 +179,8 @@ export const projects: Project[] = [
     title: "配信用ツール",
     en: "STREAMING TOOLS",
     shortDescription: "配信をもっと楽しくする自作ツール群。順次公開予定。",
-    status: "published",
+    // 公開できる内容が揃うまで非表示（2026-09-07）
+    status: "draft",
     phase: "planned",
   },
 ];
@@ -144,6 +189,14 @@ export const projects: Project[] = [
 export const publishedProjects: Project[] = projects.filter(
   (p) => p.status === "published",
 );
+
+/**
+ * ローカル開発では draft も確認できる。production build は公開済みだけを対象にし、
+ * 一覧・詳細・how-to・sitemapへ draft のrouteを生成しない。
+ */
+export const previewableProjects: Project[] = import.meta.env.DEV
+  ? projects
+  : publishedProjects;
 
 /**
  * ヘッダーナビに「Projects」を出すかどうか。
@@ -161,3 +214,6 @@ export const projectPhaseMeta: Record<ProjectPhase, { label: string; cls: string
 
 /** 詳細ページのURL */
 export const projectUrl = (p: Project): string => `/projects/${p.slug}`;
+
+/** 紹介・使い方ページのURL */
+export const projectHowToUrl = (p: Project): string => `${projectUrl(p)}/how-to`;

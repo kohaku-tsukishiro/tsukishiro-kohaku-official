@@ -1,9 +1,11 @@
 /**
  * 配信ジャンル定義 — トップの活動カードと /streams ページで共有
  *
- * 運用: デビュー後、ジャンルごとの YouTube 再生リストができたら
- * playlistUrl を設定する。設定すると /streams のカードが
- * 「準備中」→「公開中」になり、再生リストへのリンクが有効になる。
+ * 運用:
+ *  - 配信が終わったら streamArchives に1件追加する（新しいものを先頭に）。
+ *    該当ジャンルのカードが「準備中」→「公開中」になり、アーカイブ一覧に並ぶ。
+ *  - ジャンルごとの YouTube 再生リストができたら playlistUrl を設定する。
+ *    再生リストへのリンクがアーカイブ一覧の下に表示される。
  */
 
 export interface StreamGenre {
@@ -19,6 +21,17 @@ export interface StreamGenre {
   detail: string;
   /** YouTube 再生リストURL。設定するとリンクが有効になる */
   playlistUrl?: string;
+}
+
+/** 配信アーカイブ1本分 */
+export interface StreamArchive {
+  /** 所属ジャンル（StreamGenre.id） */
+  genre: string;
+  /** 配信日（表示用。例: "2026.09.05"） */
+  date: string;
+  title: string;
+  /** YouTube の動画URL（?si= などのトラッキング引数は付けない） */
+  url: string;
 }
 
 export const streamGenres: StreamGenre[] = [
@@ -60,3 +73,23 @@ export const streamGenres: StreamGenre[] = [
   },
   // 「ちょっと役に立つ話」(旧ACT-05) は雑談内で扱うためジャンルからは除外
 ];
+
+/** 配信アーカイブ（新しいものを先頭に） */
+export const streamArchives: StreamArchive[] = [
+  {
+    genre: "talk",
+    date: "2026.09.06",
+    title: "「雑談」初配信振り返り！！",
+    url: "https://www.youtube.com/live/PNe7cuz3ysA",
+  },
+  {
+    genre: "talk",
+    date: "2026.09.05",
+    title: "ついに初配信だ！！",
+    url: "https://www.youtube.com/live/WRj4QBicDnc",
+  },
+];
+
+/** ジャンルに属するアーカイブ（新しい順） */
+export const archivesOf = (genreId: string): StreamArchive[] =>
+  streamArchives.filter((a) => a.genre === genreId);

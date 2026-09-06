@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
-  publishedProjects,
+  previewableProjects,
+  projectHowToUrl,
   projectPhaseMeta,
   type Project,
 } from "../../data/projects";
@@ -9,12 +10,13 @@ import {
 /**
  * Project 詳細ページ — /projects/[slug]
  *
- * getStaticPaths が返すのは status: "published" のものだけなので、
- * draft の詳細URLはビルドされず（= 404 になり）内容が外部に出ることはない。
+ * production の getStaticPaths が返すのは status: "published" のものだけなので、
+ * draft の詳細URLはビルドされず（= 404 になり）内容が外部に出ない。
+ * DEV のみ previewableProjects に draft が含まれ、公開前の内容を確認できる。
  * 各セクションはデータが存在するときだけ描画する。
  */
 export function getStaticPaths() {
-  return publishedProjects.map((project) => ({
+  return previewableProjects.map((project) => ({
     params: { slug: project.slug },
     props: { project },
   }));
@@ -39,7 +41,7 @@ const sections = [
   { id: "usage", ja: "使い方", en: "How to use", show: !!p.usage?.length },
   { id: "platforms", ja: "対応環境", en: "Platforms", show: !!p.platforms?.length },
   { id: "notes", ja: "注意事項", en: "Notes", show: !!p.notes?.length },
-  { id: "links", ja: "リンク", en: "Links", show: !!(p.appUrl || p.repositoryUrl || p.links?.length) },
+  { id: "links", ja: "リンク", en: "Links", show: !!(p.appUrl || p.hasHowTo || p.repositoryUrl || p.links?.length) },
   { id: "updates", ja: "更新情報", en: "Updates", show: !!p.updates?.length },
   { id: "credits", ja: "制作", en: "Credits", show: !!p.credits?.length },
 ].filter((s) => s.show);
@@ -75,6 +77,22 @@ const has = (id: string) => sections.some((s) => s.id === id);
       <p class="pd-en">{p.en}</p>
       <h1 class="pd-title">{p.title}</h1>
       <p class="pd-desc">{p.tagline ?? p.shortDescription}</p>
+      {(p.appUrl || p.hasHowTo) && (
+        <div class="pd-hero-actions">
+          {p.appUrl && (
+            <a
+              class="mwt-btn mwt-btn--navy"
+              href={p.appUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="アプリを使う（外部サイトで開きます）"
+            >アプリを使う ↗</a>
+          )}
+          {p.hasHowTo && (
+            <a class="mwt-btn pd-howto-btn" href={projectHowToUrl(p)}>使い方を見る →</a>
+          )}
+        </div>
+      )}
       {(p.publishedAt || p.updatedAt) && (
         <p class="pd-dates">
           {p.publishedAt && <span>RELEASED {p.publishedAt}</span>}
@@ -227,7 +245,16 @@ const has = (id: string) => sections.some((s) => s.id === id);
             </div>
             <div class="pd-links reveal">
               {p.appUrl && (
-                <a class="mwt-btn mwt-btn--primary" href={p.appUrl}>アプリを開く →</a>
+                <a
+                  class="mwt-btn mwt-btn--primary"
+                  href={p.appUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="アプリを使う（外部サイトで開きます）"
+                >アプリを使う ↗</a>
+              )}
+              {p.hasHowTo && (
+                <a class="mwt-btn mwt-btn--secondary" href={projectHowToUrl(p)}>使い方を見る →</a>
               )}
               {p.repositoryUrl && (
                 <a class="mwt-btn mwt-btn--secondary" href={p.repositoryUrl}>ソースコード</a>
@@ -430,6 +457,24 @@ const has = (id: string) => sections.some((s) => s.id === id);
     color: var(--c-navy);
     line-height: 2.05;
     max-width: 560px;
+  }
+
+  .pd-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .pd-howto-btn {
+    color: var(--c-navy);
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(255, 255, 255, 0.96);
+  }
+
+  .pd-howto-btn:hover,
+  .pd-howto-btn:focus-visible {
+    background: #fff;
   }
 
   .pd-dates {
@@ -648,5 +693,6 @@ const has = (id: string) => sections.some((s) => s.id === id);
     .pd-update,
     .pd-credit { grid-template-columns: 1fr; gap: 2px; }
     .pd-links .mwt-btn { width: 100%; }
+    .pd-hero-actions .mwt-btn { width: 100%; }
   }
 </style>

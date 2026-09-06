@@ -1,16 +1,16 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
-  publishedProjects,
+  previewableProjects,
   projectPhaseMeta,
   projectUrl,
 } from "../data/projects";
 
 /**
  * Moonlight White Tiger Project — プロダクト一覧
- * データは src/data/projects.ts で管理。status が "published" のものだけ表示する。
+ * データは src/data/projects.ts で管理。production は published のみ、DEV は draft も表示する。
  */
-const projects = publishedProjects;
+const projects = previewableProjects;
 ---
 
 <BaseLayout
