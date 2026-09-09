@@ -4,6 +4,7 @@ import {
   previewableProjects,
   projectHowToUrl,
   projectPhaseMeta,
+  projectUpdateKindMeta,
   type Project,
 } from "../../data/projects";
 
@@ -276,14 +277,29 @@ const has = (id: string) => sections.some((s) => s.id === id);
               </div>
               <span class="sec-line" aria-hidden="true"></span>
             </div>
-            <dl class="pd-updates doc-panel reveal">
+            <div class="pd-updates reveal">
               {p.updates!.map((u) => (
-                <div class="pd-update">
-                  <dt>{u.date}</dt>
-                  <dd>{u.text}</dd>
-                </div>
+                <article class="pd-update doc-panel">
+                  <header class="pd-update-head">
+                    <time class="pd-update-date" datetime={u.date.replaceAll(".", "-")}>
+                      {u.date}
+                    </time>
+                    {u.title && <span class="pd-update-title">{u.title}</span>}
+                  </header>
+                  <ul class="pd-update-items">
+                    {u.items.map((it) => {
+                      const k = projectUpdateKindMeta[it.kind];
+                      return (
+                        <li>
+                          <span class={`mwt-badge ${k.cls} pd-update-kind`}>{k.label}</span>
+                          <span class="pd-update-text">{it.text}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </article>
               ))}
-            </dl>
+            </div>
           </section>
         )}
 
@@ -631,14 +647,89 @@ const has = (id: string) => sections.some((s) => s.id === id);
     gap: 14px;
   }
 
-  .pd-updates,
+  /* ---- 更新情報（日付ごとのカード） ---- */
+  .pd-updates {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 760px;
+  }
+
+  .pd-update {
+    padding: 18px 24px 20px;
+  }
+
+  .pd-update-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+    border-bottom: var(--border-dim);
+  }
+
+  .pd-update-date {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    color: var(--c-cyan-text);
+  }
+
+  .pd-update-title {
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--c-navy);
+  }
+
+  .pd-update-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .pd-update-items li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 6px 14px;
+    padding: 12px 0;
+    border-bottom: var(--border-dim);
+  }
+
+  .pd-update-items li:last-child {
+    border-bottom: none;
+    padding-bottom: 2px;
+  }
+
+  .pd-update-kind {
+    font-size: 0.64rem;
+    padding: 3px 8px;
+    margin-top: 5px;
+    white-space: nowrap;
+  }
+
+  /* brand.css に無い「その他」用の控えめなバッジ */
+  .pd-update-kind.mwt-badge--muted {
+    color: var(--c-muted);
+    border-color: rgba(84, 113, 138, 0.35);
+    background: rgba(84, 113, 138, 0.06);
+  }
+
+  .pd-update-text {
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--c-ink);
+  }
+
+  /* ---- 制作 ---- */
   .pd-credits {
     margin: 0;
     padding: 8px 24px;
     max-width: 760px;
   }
 
-  .pd-update,
   .pd-credit {
     display: grid;
     grid-template-columns: 140px 1fr;
@@ -647,10 +738,8 @@ const has = (id: string) => sections.some((s) => s.id === id);
     border-bottom: var(--border-dim);
   }
 
-  .pd-update:last-child,
   .pd-credit:last-child { border-bottom: none; }
 
-  .pd-update dt,
   .pd-credit dt {
     font-family: var(--font-mono);
     font-size: 0.7rem;
@@ -659,7 +748,6 @@ const has = (id: string) => sections.some((s) => s.id === id);
     padding-top: 5px;
   }
 
-  .pd-update dd,
   .pd-credit dd {
     margin: 0;
     font-size: 0.9rem;
@@ -688,9 +776,10 @@ const has = (id: string) => sections.some((s) => s.id === id);
     .pd-features,
     .pd-shots { grid-template-columns: 1fr; }
     .pd-steps,
-    .pd-updates,
     .pd-credits { padding: 4px 18px; }
-    .pd-update,
+    .pd-update { padding: 14px 18px 16px; }
+    .pd-update-items li { grid-template-columns: 1fr; gap: 4px; }
+    .pd-update-kind { margin-top: 0; justify-self: start; }
     .pd-credit { grid-template-columns: 1fr; gap: 2px; }
     .pd-links .mwt-btn { width: 100%; }
     .pd-hero-actions .mwt-btn { width: 100%; }

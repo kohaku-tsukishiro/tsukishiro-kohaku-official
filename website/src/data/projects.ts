@@ -37,11 +37,42 @@ export interface ProjectLink {
   url: string;
 }
 
+/**
+ * 更新履歴の項目種別
+ *   new     … 新機能
+ *   improve … 改善
+ *   fix     … 不具合修正
+ *   other   … その他（表記変更など）
+ */
+export type ProjectUpdateKind = "new" | "improve" | "fix" | "other";
+
+export interface ProjectUpdateItem {
+  kind: ProjectUpdateKind;
+  /** 利用者が体感できる変化として書く（内部実装の用語は出さない） */
+  text: string;
+}
+
+/**
+ * 更新履歴（1日ぶん）。同じ日の細かな変更は1つにまとめる。
+ * 日付はアプリ側のコミット日で統一する。
+ */
 export interface ProjectUpdate {
   /** 表示用日付（例: "2026.09.07"） */
   date: string;
-  text: string;
+  /** 見出し（例: "大型アップデート"）。省略可 */
+  title?: string;
+  items: ProjectUpdateItem[];
 }
+
+export const projectUpdateKindMeta: Record<
+  ProjectUpdateKind,
+  { label: string; cls: string }
+> = {
+  new: { label: "新機能", cls: "mwt-badge--ok" },
+  improve: { label: "改善", cls: "mwt-badge--blue" },
+  fix: { label: "不具合修正", cls: "mwt-badge--amber" },
+  other: { label: "その他", cls: "mwt-badge--muted" },
+};
 
 export interface ProjectCredit {
   role: string;
@@ -154,8 +185,55 @@ export const projects: Project[] = [
     ],
     appUrl: "https://kohaku-tsukishiro.github.io/kemoke17/",
     hasHowTo: true,
+    // 更新履歴はサイト掲載開始（2026-09-08）以降のぶんを載せる。新しい日付を先頭に。
+    updates: [
+      {
+        date: "2026.09.09",
+        title: "けもケット17購入サポートをアップデートしました",
+        items: [
+          {
+            kind: "new",
+            text: "会場マップを、新たに制作したオリジナルマップへ変更しました。サークルスペースの位置・番号を確認したうえで、アプリ内の「行く予定」「あとで」「済み」や巡回順、サークル詳細表示と連動するよう実装しています。",
+          },
+          {
+            kind: "improve",
+            text: "マップ上の巡回順表示を、最大5件から10件へ拡張しました。",
+          },
+          {
+            kind: "improve",
+            text: "「行く順番」のドラッグ操作を改善しました。",
+          },
+          {
+            kind: "new",
+            text: "買い物リストに「買えなかった」タブを追加しました。",
+          },
+          {
+            kind: "improve",
+            text: "「買えなかった」タブ内の表示を調整しました。",
+          },
+          {
+            kind: "other",
+            text: "これまで保存している予定・メモ・欲しいものリスト等のデータは、そのまま引き続きご利用いただけます。",
+          },
+        ],
+      },
+      {
+        date: "2026.09.08",
+        items: [
+          {
+            kind: "improve",
+            text: "配置図を拡大表示したとき、「次の場所を表示」やダブルタップで一気に拡大しても画像がぼやけなくなりました。ピンチ操作でも、指を離した時点で鮮明に描き直されます。",
+          },
+          {
+            kind: "improve",
+            text: "拡大表示中に黒い余白をタップしても閉じないようにしました。閉じるのは全体表示のときの余白タップ、または右上の✕ボタンです。拡大中に地図を動かしていて誤って閉じてしまう問題への対策です。",
+          },
+        ],
+      },
+    ],
     credits: [{ role: "制作", name: "月白コハク" }],
     publishedAt: "2026.09.05",
+    updatedAt: "2026.09.09",
     seo: {
       title: "けもケット17 購入サポートアプリ | 月白コハク",
       description:
