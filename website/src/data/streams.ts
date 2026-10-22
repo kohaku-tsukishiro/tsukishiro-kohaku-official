@@ -30,7 +30,7 @@ export interface StreamArchive {
   /** 配信日（表示用。例: "2026.09.05"） */
   date: string;
   title: string;
-  /** YouTube の動画URL（?si= などのトラッキング引数は付けない） */
+  /** YouTube の動画URL（?si= などのトラッキング引数は付けない）。ショートは /shorts/ID 形式 */
   url: string;
 }
 
@@ -71,11 +71,92 @@ export const streamGenres: StreamGenre[] = [
     detail:
       "自作ツールの紹介や、開発の様子をお届けする配信。完成したものは Projects ページで公開します。",
   },
+  {
+    id: "shorts",
+    no: "ACT-05",
+    name: "ショート",
+    en: "SHORTS",
+    description: "配信や歌の見どころを短くまとめたショート動画。",
+    detail:
+      "配信や歌ってみたの見どころを1分以内にまとめたショート動画。気軽に見られる切り抜きや小ネタを公開します。",
+  },
   // 「ちょっと役に立つ話」(旧ACT-05) は雑談内で扱うためジャンルからは除外
 ];
 
 /** 配信アーカイブ（新しいものを先頭に） */
 export const streamArchives: StreamArchive[] = [
+  {
+    genre: "talk",
+    date: "2026.10.21",
+    title: "「コラボ雑談」かるあくんと一緒に焼肉食べながら話すよ～！！【水隅かるあ】",
+    url: "https://www.youtube.com/live/VLps0A-77Tg",
+  },
+  {
+    genre: "talk",
+    date: "2026.10.15",
+    title: "「トークデッキ雑談」何を聞かれるかわからない！？カードに任せてゆるっとおしゃべり！",
+    url: "https://www.youtube.com/live/zFyHOh_n-8k",
+  },
+  {
+    genre: "shorts",
+    date: "2026.10.12",
+    title: "『ray』歌ってみました",
+    url: "https://www.youtube.com/shorts/kPK3WWr7S_o",
+  },
+  {
+    genre: "music",
+    date: "2026.10.11",
+    title: "「突発歌枠」突発で歌枠（ちょっとだけ）",
+    url: "https://www.youtube.com/live/4hUWeZGEPig",
+  },
+  {
+    genre: "dev",
+    date: "2026.10.07",
+    title: "「けもケ17」けもケアプリ大反省会！マシュマロも読むよ🐯🌈",
+    url: "https://www.youtube.com/live/0VzzJSENhRs",
+  },
+  {
+    genre: "music",
+    date: "2026.09.26",
+    title: "「歌枠」コハク歌枠やります",
+    url: "https://www.youtube.com/live/SRKAAJyfXIQ",
+  },
+  {
+    genre: "talk",
+    date: "2026.09.22",
+    title: "「記念雑談」初めての歌ってみた、どうだった？",
+    url: "https://www.youtube.com/live/EdxMu1OCFKU",
+  },
+  {
+    genre: "music",
+    date: "2026.09.22",
+    title: "「歌ってみた」ray / BUMP OF CHICKEN",
+    url: "https://www.youtube.com/watch?v=cd2d8yBhyPQ",
+  },
+  {
+    genre: "talk",
+    date: "2026.09.17",
+    title: "「雑談」京都いってきた！旅行の思い出いっぱい話す🐯✨",
+    url: "https://www.youtube.com/live/ifv-uyW-GFQ",
+  },
+  {
+    genre: "talk",
+    date: "2026.09.13",
+    title: "「雑談」月見バーガー食べ食べ雑談🍔🌕 お昼ごはん一緒に食べよ～！",
+    url: "https://www.youtube.com/live/8kw3n39ZPrU",
+  },
+  {
+    genre: "game",
+    date: "2026.09.12",
+    title: "「漢字でGO！」漢字力、見せつけます。",
+    url: "https://www.youtube.com/live/aaqj6V34-ww",
+  },
+  {
+    genre: "dev",
+    date: "2026.09.08",
+    title: "「使い方解説」けもケット17 お買い物支援アプリを実際に使ってみよう！",
+    url: "https://www.youtube.com/live/HkQ7Cb_kRUc",
+  },
   {
     genre: "talk",
     date: "2026.09.06",

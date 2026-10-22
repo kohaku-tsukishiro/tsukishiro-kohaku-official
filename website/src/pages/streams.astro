@@ -29,6 +29,10 @@ const icons: Record<string, string> = {
     <rect x="10" y="10" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/>
     <rect x="14" y="14" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.8"/>
   </svg>`,
+  shorts: `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <rect x="10" y="4" width="12" height="24" rx="3" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M14.5 12.5 L19.5 16 L14.5 19.5 Z" fill="currentColor" opacity="0.8"/>
+  </svg>`,
 };
 ---
 
@@ -123,6 +127,9 @@ const icons: Record<string, string> = {
           <span>
             配信アーカイブは配信後に順次ここへ追加していきます。
             最新情報は配信・Xでお知らせします。
+            配信で読んでほしい質問・お便りは
+            <a href="https://marshmallow-qa.com/1f0c3umyxhp21we" target="_blank" rel="noopener noreferrer">マシュマロ ↗</a>
+            から送れます。
           </span>
         </div>
       </div>
@@ -404,6 +411,18 @@ const icons: Record<string, string> = {
 
   .sg-info {
     align-items: center;
+  }
+
+  .sg-info a {
+    color: var(--c-blue);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sg-info a:hover,
+  .sg-info a:focus-visible {
+    color: var(--c-navy);
   }
 
   /* ============================================================
