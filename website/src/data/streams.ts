@@ -171,6 +171,21 @@ export const streamArchives: StreamArchive[] = [
   },
 ];
 
+/** YouTube URL（/live/ID, /shorts/ID, watch?v=ID）から動画IDを取り出す */
+export const videoIdOf = (url: string): string | undefined => {
+  const m = url.match(/(?:\/live\/|\/shorts\/|[?&]v=)([A-Za-z0-9_-]{11})/);
+  return m?.[1];
+};
+
+/**
+ * サムネイルURL（320×180）。動画IDから決まるので API キー不要。
+ * ショートも16:9（両脇ぼかし）で返るため同じ扱いでよい。
+ */
+export const thumbnailOf = (url: string): string | undefined => {
+  const id = videoIdOf(url);
+  return id ? `https://i.ytimg.com/vi/${id}/mqdefault.jpg` : undefined;
+};
+
 /** ジャンルに属するアーカイブ（新しい順） */
 export const archivesOf = (genreId: string): StreamArchive[] =>
   streamArchives.filter((a) => a.genre === genreId);

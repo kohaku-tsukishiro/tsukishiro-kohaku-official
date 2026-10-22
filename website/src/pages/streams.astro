@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { streamGenres, archivesOf } from "../data/streams";
+import { streamGenres, archivesOf, thumbnailOf } from "../data/streams";
 
 /**
  * 配信 — ジャンル別アーカイブページ
@@ -87,6 +87,10 @@ const icons: Record<string, string> = {
                     <p class="sg-name">{g.name}</p>
                     <p class="sg-name-en">{g.en}</p>
                     <p class="sg-detail">{g.detail}</p>
+                  </div>
+                </div>
+                {(archives.length > 0 || g.playlistUrl || !isLive) && (
+                  <div class="sg-archive-wrap">
                     {archives.length > 0 && (
                       <ul class="sg-archives">
                         {archives.map((a) => (
@@ -97,8 +101,19 @@ const icons: Record<string, string> = {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <time class="sg-archive-date">{a.date}</time>
-                              <span class="sg-archive-title">{a.title}</span>
+                              <img
+                                class="sg-archive-thumb"
+                                src={thumbnailOf(a.url)}
+                                width="320"
+                                height="180"
+                                alt=""
+                                loading="lazy"
+                                decoding="async"
+                              />
+                              <span class="sg-archive-texts">
+                                <time class="sg-archive-date">{a.date}</time>
+                                <span class="sg-archive-title">{a.title}</span>
+                              </span>
                               <span class="sg-archive-ext" aria-hidden="true">↗</span>
                             </a>
                           </li>
@@ -116,7 +131,7 @@ const icons: Record<string, string> = {
                       </p>
                     )}
                   </div>
-                </div>
+                )}
               </article>
             );
           })}
@@ -293,7 +308,7 @@ const icons: Record<string, string> = {
     display: flex;
     gap: 18px;
     padding: 20px 22px 22px;
-    flex: 1;
+    flex: 0 0 auto;
   }
 
   .sg-chip {
@@ -346,7 +361,7 @@ const icons: Record<string, string> = {
   }
 
   .sg-note {
-    margin: 12px 0 0;
+    margin: 0;
     font-size: 0.78rem;
     color: #8a5f1d;
     letter-spacing: 0.04em;
@@ -354,18 +369,23 @@ const icons: Record<string, string> = {
     padding-top: 10px;
   }
 
+  .sg-archive-wrap {
+    padding: 0 22px 22px;
+    margin-top: -6px;
+  }
+
   .sg-archives {
     list-style: none;
-    margin: 14px 0 0;
+    margin: 0;
     padding: 0;
     border-top: 1px solid rgba(20, 40, 80, 0.12);
   }
 
   .sg-archive {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: baseline;
-    gap: 10px;
+    grid-template-columns: 128px 1fr auto;
+    align-items: center;
+    gap: 14px;
     padding: 10px 0;
     border-bottom: 1px solid rgba(20, 40, 80, 0.12);
     color: var(--c-ink);
@@ -379,6 +399,31 @@ const icons: Record<string, string> = {
     text-decoration: underline;
   }
 
+  .sg-archive-thumb {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid rgba(20, 40, 80, 0.12);
+    background: rgba(20, 40, 80, 0.06);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .sg-archive:hover .sg-archive-thumb,
+  .sg-archive:focus-visible .sg-archive-thumb {
+    border-color: rgba(56, 195, 226, 0.7);
+    box-shadow: 0 6px 18px rgba(43, 124, 217, 0.18);
+  }
+
+  .sg-archive-texts {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
   .sg-archive-date {
     font-family: var(--font-mono, monospace);
     font-size: 0.74rem;
@@ -388,6 +433,10 @@ const icons: Record<string, string> = {
 
   .sg-archive-title {
     font-weight: 600;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   .sg-archive-ext {
@@ -396,6 +445,7 @@ const icons: Record<string, string> = {
   }
 
   .sg-open {
+    display: inline-block;
     margin-top: 14px;
     font-weight: 700;
     font-size: 0.88rem;
@@ -433,5 +483,6 @@ const icons: Record<string, string> = {
     .sg-inner { padding-top: 44px; padding-bottom: 48px; }
     .sg-grid { grid-template-columns: 1fr; }
     .sg-body { flex-direction: column; gap: 14px; }
+    .sg-archive { grid-template-columns: 104px 1fr auto; gap: 10px; }
   }
 </style>
